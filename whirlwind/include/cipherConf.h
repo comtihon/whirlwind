@@ -25,14 +25,19 @@ typedef struct
 				char *dictInMemory;	//указатель на память с заранее считанным словарём
 				FILE *dictInFile;	//указатель на файл со словарём
 		}dict;
+		long cryptLen;				//длина кодируемой информации
+		short dictSelected;			//0 - словарь в памяти, 1 - словарь в файле
 
 		//дата, которую нужно зашифровать
 		union Data{
 				char *cryptString;	//указатель на строку в памяти
 				FILE *cryptFile;	//укзаатель на файл
 		}data;
+		long dictLen;				//длина словаря
+
+		short dataSelected;			//0 - дата в памяти, 1 - дата в файле
+
 		int randInit;				//инициализатор случайной последовательности.
-		long cryptLen;				//длина кодируемой информации
 
 		int variability;			//изменчивость словаря
 		int withdraw;				//значение отката

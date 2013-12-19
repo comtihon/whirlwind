@@ -37,6 +37,7 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf)
 	else
 	{
 		conf->dict.dictInMemory = dict;
+		conf->dictSelected = 0;
 		return OK;
 	}
 }
@@ -51,6 +52,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf)
 	else
 	{
 		conf->dict.dictInFile = dict;
+		conf->dictSelected = 1;
 		return OK;
 	}
 }
@@ -70,6 +72,7 @@ ReturnCode setDataWithMemory(char *data, CipherInst *conf)
 	else
 	{
 		conf->data.cryptString = data;
+		conf->dataSelected = 0;
 		return OK;
 	}
 }
@@ -84,6 +87,7 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
 	else
 	{
 		conf->data.cryptFile = data;
+		conf->dataSelected = 1;
 		return OK;
 	}
 }
