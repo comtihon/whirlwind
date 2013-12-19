@@ -28,7 +28,7 @@ long *cryptOneSymbol(CipherInst *conf, char symbol)
 	//TODO add withdraw
 	//TODO change dict
 
-	return result;
+	return result;	//TODO free result (doc)
 }
 
 /**
