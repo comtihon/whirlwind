@@ -8,6 +8,8 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "whirlwind/include/cipher.h"
+#include "string.h"
+
+#include "whirlwind/include/cipherConf.h"
 
 #endif /* MAIN_H_ */

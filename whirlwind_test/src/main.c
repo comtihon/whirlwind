@@ -10,6 +10,10 @@
 
 int main()
 {
-	printHello();
+	char *toCrypt = "very secret hello world";
+	CipherInst *instance = init(2,7,strlen(toCrypt));
+	setDataWithMemory(toCrypt, instance);
+
+	freeInst(instance);
 	return 0;
 }

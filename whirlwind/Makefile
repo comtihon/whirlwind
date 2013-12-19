@@ -115,29 +115,29 @@ whirlwind/fast:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/build
 .PHONY : whirlwind/fast
 
-src/cipher.o: src/cipher.c.o
-.PHONY : src/cipher.o
+src/cipherConf.o: src/cipherConf.c.o
+.PHONY : src/cipherConf.o
 
 # target to build an object file
-src/cipher.c.o:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipher.c.o
-.PHONY : src/cipher.c.o
+src/cipherConf.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.o
+.PHONY : src/cipherConf.c.o
 
-src/cipher.i: src/cipher.c.i
-.PHONY : src/cipher.i
+src/cipherConf.i: src/cipherConf.c.i
+.PHONY : src/cipherConf.i
 
 # target to preprocess a source file
-src/cipher.c.i:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipher.c.i
-.PHONY : src/cipher.c.i
+src/cipherConf.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.i
+.PHONY : src/cipherConf.c.i
 
-src/cipher.s: src/cipher.c.s
-.PHONY : src/cipher.s
+src/cipherConf.s: src/cipherConf.c.s
+.PHONY : src/cipherConf.s
 
 # target to generate assembly for a file
-src/cipher.c.s:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipher.c.s
-.PHONY : src/cipher.c.s
+src/cipherConf.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.s
+.PHONY : src/cipherConf.c.s
 
 # Help Target
 help:
@@ -148,9 +148,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... whirlwind"
-	@echo "... src/cipher.o"
-	@echo "... src/cipher.i"
-	@echo "... src/cipher.s"
+	@echo "... src/cipherConf.o"
+	@echo "... src/cipherConf.i"
+	@echo "... src/cipherConf.s"
 .PHONY : help
 
 

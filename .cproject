@@ -38,7 +38,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="cdt.managedbuild.toolchain.gnu.base.1785729859.10613276" name="cipher.c" rcbsApplicability="disable" resourcePath="whirlwind/src/cipher.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.base.1357083630.1654753081">
+					<fileInfo id="cdt.managedbuild.toolchain.gnu.base.1785729859.10613276" name="cipher.c" rcbsApplicability="disable" resourcePath="whirlwind/src/cipherConf.c" toolsToInvoke="cdt.managedbuild.tool.gnu.c.compiler.base.1357083630.1654753081">
 						<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.1357083630.1654753081" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base.1357083630">
 							<option id="gnu.c.compiler.option.include.paths.1647670276" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/whirlwind/test/include}&quot;"/>

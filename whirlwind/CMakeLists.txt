@@ -9,7 +9,7 @@ set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_C_FLAGS "-std=c99") 
 
 set (LIB_SOURCE  
-	${PROJECT_SOURCE_DIR}/cipher.c)
+	${PROJECT_SOURCE_DIR}/cipherConf.c)
                                 
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
