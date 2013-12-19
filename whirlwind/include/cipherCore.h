@@ -11,5 +11,12 @@
 
 #include "cipherConf.h"
 
+/**
+ * Возвращает позицию символа в словаре или -1, если символ отсутствует.
+ * @param conf	рабочая конфигурация
+ * @param symbol кодируемый символ
+ */
+long findSymbolPosInDict(CipherInst *conf, char symbol);
+
 
 #endif /* CIPHERCORE_H_ */

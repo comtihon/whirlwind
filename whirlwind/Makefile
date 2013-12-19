@@ -139,6 +139,30 @@ src/cipherConf.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.s
 .PHONY : src/cipherConf.c.s
 
+src/cipherCore.o: src/cipherCore.c.o
+.PHONY : src/cipherCore.o
+
+# target to build an object file
+src/cipherCore.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.o
+.PHONY : src/cipherCore.c.o
+
+src/cipherCore.i: src/cipherCore.c.i
+.PHONY : src/cipherCore.i
+
+# target to preprocess a source file
+src/cipherCore.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.i
+.PHONY : src/cipherCore.c.i
+
+src/cipherCore.s: src/cipherCore.c.s
+.PHONY : src/cipherCore.s
+
+# target to generate assembly for a file
+src/cipherCore.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.s
+.PHONY : src/cipherCore.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -151,6 +175,9 @@ help:
 	@echo "... src/cipherConf.o"
 	@echo "... src/cipherConf.i"
 	@echo "... src/cipherConf.s"
+	@echo "... src/cipherCore.o"
+	@echo "... src/cipherCore.i"
+	@echo "... src/cipherCore.s"
 .PHONY : help
 
 

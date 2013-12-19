@@ -5,14 +5,15 @@
  *      Author: tihon
  */
 
-
 #include "main.h"
 
 int main()
 {
+	char *dict = "qwertyuiopasdfghjklzxcvbnm";
 	char *toCrypt = "very secret hello world";
-	CipherInst *instance = init(2,7,strlen(toCrypt));
+	CipherInst *instance = init(time(NULL), 2, 7, strlen(toCrypt));
 	setDataWithMemory(toCrypt, instance);
+	setDictWithMemory(dict, instance);
 
 	freeInst(instance);
 	return 0;

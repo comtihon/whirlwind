@@ -11,7 +11,7 @@
  * Инициализирует сущность с настройками шифра
  * @return указатель на сущность или NULL
  */
-CipherInst *init(int variability, int withdraw, long cryptLen)
+CipherInst *init(long randInit, int variability, int withdraw, long cryptLen)
 {
 	CipherInst *instance = malloc (sizeof(CipherInst));
 	if(!instance)
@@ -19,6 +19,18 @@ CipherInst *init(int variability, int withdraw, long cryptLen)
 		printf("Error allocating space for conf!\n");
 		return NULL;
 	}
+
+	instance->support = malloc (sizeof(Support));
+	if(!instance->support)
+	{
+		printf("Error allocating space for conf`s support!\n");
+		return NULL;
+	}
+
+	instance->variability = variability;
+	instance->withdraw = withdraw;
+	instance->cryptLen = cryptLen;
+	srand48_r(randInit, &instance->support->randomBuffer);
 	return instance;
 }
 
@@ -37,7 +49,7 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf)
 	else
 	{
 		conf->dict.dictInMemory = dict;
-		conf->dictSelected = 0;
+		conf->support->dictSelected = 0;
 		return OK;
 	}
 }
@@ -52,7 +64,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf)
 	else
 	{
 		conf->dict.dictInFile = dict;
-		conf->dictSelected = 1;
+		conf->support->dictSelected = 1;
 		return OK;
 	}
 }
@@ -72,7 +84,7 @@ ReturnCode setDataWithMemory(char *data, CipherInst *conf)
 	else
 	{
 		conf->data.cryptString = data;
-		conf->dataSelected = 0;
+		conf->support->dataSelected = 0;
 		return OK;
 	}
 }
@@ -87,7 +99,7 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
 	else
 	{
 		conf->data.cryptFile = data;
-		conf->dataSelected = 1;
+		conf->support->dataSelected = 1;
 		return OK;
 	}
 }
@@ -99,5 +111,6 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
  */
 void freeInst(CipherInst *conf)
 {
+	free(conf->support);
 	free(conf);
 }
