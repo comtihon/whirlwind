@@ -115,6 +115,30 @@ whirlwind/fast:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/build
 .PHONY : whirlwind/fast
 
+src/cipherAddon.o: src/cipherAddon.c.o
+.PHONY : src/cipherAddon.o
+
+# target to build an object file
+src/cipherAddon.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.o
+.PHONY : src/cipherAddon.c.o
+
+src/cipherAddon.i: src/cipherAddon.c.i
+.PHONY : src/cipherAddon.i
+
+# target to preprocess a source file
+src/cipherAddon.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.i
+.PHONY : src/cipherAddon.c.i
+
+src/cipherAddon.s: src/cipherAddon.c.s
+.PHONY : src/cipherAddon.s
+
+# target to generate assembly for a file
+src/cipherAddon.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.s
+.PHONY : src/cipherAddon.c.s
+
 src/cipherConf.o: src/cipherConf.c.o
 .PHONY : src/cipherConf.o
 
@@ -163,6 +187,30 @@ src/cipherCore.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.s
 .PHONY : src/cipherCore.c.s
 
+src/cipherSupport.o: src/cipherSupport.c.o
+.PHONY : src/cipherSupport.o
+
+# target to build an object file
+src/cipherSupport.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.o
+.PHONY : src/cipherSupport.c.o
+
+src/cipherSupport.i: src/cipherSupport.c.i
+.PHONY : src/cipherSupport.i
+
+# target to preprocess a source file
+src/cipherSupport.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.i
+.PHONY : src/cipherSupport.c.i
+
+src/cipherSupport.s: src/cipherSupport.c.s
+.PHONY : src/cipherSupport.s
+
+# target to generate assembly for a file
+src/cipherSupport.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.s
+.PHONY : src/cipherSupport.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -172,12 +220,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... whirlwind"
+	@echo "... src/cipherAddon.o"
+	@echo "... src/cipherAddon.i"
+	@echo "... src/cipherAddon.s"
 	@echo "... src/cipherConf.o"
 	@echo "... src/cipherConf.i"
 	@echo "... src/cipherConf.s"
 	@echo "... src/cipherCore.o"
 	@echo "... src/cipherCore.i"
 	@echo "... src/cipherCore.s"
+	@echo "... src/cipherSupport.o"
+	@echo "... src/cipherSupport.i"
+	@echo "... src/cipherSupport.s"
 .PHONY : help
 
 

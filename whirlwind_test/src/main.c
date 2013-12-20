@@ -11,9 +11,9 @@ int main()
 {
 	char *dict = "qwertyuiopasdfghjklzxcvbnm";
 	char *toCrypt = "very secret hello world";
-	CipherInst *instance = init(time(NULL), 2, 7, strlen(toCrypt));
-	setDataWithMemory(toCrypt, instance);
-	setDictWithMemory(dict, instance);
+	CipherInst *instance = init(time(NULL), 2, 7);
+	setDataWithMemory(toCrypt, instance, strlen(toCrypt));
+	setDictWithMemory(dict, instance, strlen(dict));
 
 	freeInst(instance);
 	return 0;

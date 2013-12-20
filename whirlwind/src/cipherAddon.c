@@ -15,18 +15,44 @@
  */
 short processWithdraw(CipherInst *conf, long *result)
 {
-	for(int i = 0; i < 2; i++)	//сохранение данных для отката
+	for (int i = 0; i < 2; i++)	//сохранение данных для отката
 		conf->support->withdrawHistory[conf->support->withdrawCount++] = result[i];
 
-	if(conf->support->withdrawCount == conf->withdraw)	//время отката
+	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
-		for(int i = 0; i < conf->withdraw; i++)
-		{
-			withdraw(conf);
-		}
+		long **extraPairs = malloc(conf->variability * sizeof(long *));	//выделить память под случайные числа
+		for (int i = 0; i < conf->variability; i++)
+			extraPairs[i] = malloc(2 * sizeof(long));
+
+		withdraw(conf, extraPairs);	//выполнить откаты
+
+		for (int i = 0; i < conf->variability; i++)	//освободить память
+			free(extraPairs[i]);
+		free(extraPairs);
+
 		return 0;
 	}
 	return 1;
+}
+
+/**
+ * Производит откаты
+ * @param conf - рабочая конфигурация
+ * @param extraPairs - память для организации рекурсии случайных чисел
+ */
+void withdraw(CipherInst *conf, long **extraPairs)
+{
+	//откатить все изменения, кроме последних двух
+	for (int i = conf->withdraw - 3; i >= 0; i -= 2)
+	{
+		srand48_r(conf->support->withdrawHistory[i], &conf->support->randomBuffer);
+		if (conf->variability > 0)		//если были случайные изменения - отменить их
+			revertExtraChangeDict(conf, extraPairs);
+		переделать на взятие адреса - брать адрес с randVal и передавать в chaneDict
+		changeDict(conf, randVal(conf, conf->dictLen), conf->support->withdrawHistory[i - 1]);
+	}
+
+	srand48_r(time(NULL), &conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 }
 
 /**
@@ -37,16 +63,11 @@ short processWithdraw(CipherInst *conf, long *result)
 void processChange(CipherInst *conf, long *result)
 {
 	srand48_r(result[1], &conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
-	long randomPos = randVal(conf, conf->dictLen);		//взять случайный символ в словаре
+	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	changeDict(conf, result, &randomPos);	//поменять местами закодированный и случайный символ
 
-	long secondRandPos = 0;	//TODO проценты вместо цикла от 1 до значения!
-	for(int i = 0; i < conf->variability; i++)	//изменение словаря в зависимости от изменчивости
-	{
-		randomPos = randVal(conf, conf->dictLen);
-		secondRandPos = randVal(conf, conf->dictLen);
-		changeDict(conf, &randomPos, &secondRandPos);
-	}
+	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
+		extraChangeDict(conf);
 }
 
 /**
@@ -56,31 +77,46 @@ void processChange(CipherInst *conf, long *result)
  */
 void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 {
-	if(conf->support->dictSelected==0)
-	{//работа с оперативной памятью
+	if (conf->support->dictSelected == 0)
+	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
 		conf->dict.dictInMemory[*secondPos] = buf;
 	}
 	else
-	{//работа с файлом
+	{	//работа с файлом
 		//TODO сделать изменение по файлу
 	}
 }
 
-void withdraw(CipherInst *conf)
+/**
+ * Производит дополнительные изменения в словаре
+ * @param conf - конфигурация
+ */
+void extraChangeDict(CipherInst *conf)
 {
-	long randInt = 0;
-	//откатить все изменения, кроме последних двух
-	for(int i = conf->support->withdrawCount - 3; i >= 0; i-=2)
-	{
-		srand48_r(conf->support->withdrawHistory[i], &conf->support->randomBuffer);
-		randInt = randVal(conf, conf->dictLen);
-		//TODO revertExtra changes
-		changeDict(randVal(conf, conf->dictLen), conf->support->withdrawHistory[i-1]);
+	long randomPos = 0;
+	long secondRandPos = 0;	//TODO проценты вместо цикла от 1 до значения!
+	for (int i = 0; i < conf->variability; i++)	//изменение словаря в зависимости от изменчивости
+	{	//extraChangeDict
+		randomPos = randVal(conf, conf->dictLen);
+		secondRandPos = randVal(conf, conf->dictLen);
+		changeDict(conf, &randomPos, &secondRandPos);
 	}
+}
 
-	srand48_r(time(NULL), &conf->support->randomBuffer);	//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
-
-	//TODO откатить все изменения словаря кроме последних 2х (т.к. они не вызывались)
+/**
+ * Отменяет дополнительные изменения словаря, сделанные с помощью extraChangeDict
+ * @param conf - рабочая конфигурация
+ * @param extraPairs - N случайных чисел. Генерируются и используются рекурсино.
+ */
+void revertExtraChangeDict(CipherInst *conf, long **extraPairs)
+{
+	for (int i = 0; i < conf->variability; i++)	//достать случайные значения
+	{
+		extraPairs[i][0] = randVal(conf, conf->dictLen);
+		extraPairs[i][1] = randVal(conf, conf->dictLen);
+	}
+	for (int i = conf->variability - 1; i >= 0; i--)//поменять местами обратно с конца - случайные места друг на друга
+		changeDict(conf, extraPairs[i][0], extraPairs[i][1]);
 }

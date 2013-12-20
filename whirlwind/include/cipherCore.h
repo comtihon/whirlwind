@@ -8,7 +8,7 @@
 #ifndef CIPHERCORE_H_
 #define CIPHERCORE_H_
 
-
+#include "cipherSupport.h"
 #include "cipherConf.h"
 #include "cipherAddon.h"
 
