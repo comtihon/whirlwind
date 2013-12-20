@@ -9,9 +9,12 @@
 
 /**
  * Инициализирует сущность с настройками шифра
+ * @param randInit - начальный инициализатор псевдослучайной последовательности
+ * @param variability - численное значение изменчивости словаря в % (от 1 до 70)
+ * @param withdraw - численное значение отката
  * @return указатель на сущность или NULL
  */
-CipherInst *init(long randInit, int variability, int withdraw, long cryptLen)
+CipherInst *init(long randInit, int variability, int withdraw)
 {
 	CipherInst *instance = malloc (sizeof(CipherInst));
 	if(!instance)
@@ -26,10 +29,17 @@ CipherInst *init(long randInit, int variability, int withdraw, long cryptLen)
 		printf("Error allocating space for conf`s support!\n");
 		return NULL;
 	}
+	instance->support->lastWithdraw=0;
 
-	instance->variability = variability;
-	instance->withdraw = withdraw;
-	instance->cryptLen = cryptLen;
+	instance->support->withdrawHistory = malloc(2 * withdraw * sizeof(long));
+	if(!instance->support->withdrawHistory)
+	{
+		printf("Error allocating space for support's withdraw history!\n");
+		return NULL;
+	}
+
+	instance->variability = variability > 70? 70 : variability;
+	instance->withdraw = withdraw * 2;	//откат - сброс 2х значений (символ-инициализатор). Требуется удвоить.
 	srand48_r(randInit, &instance->support->randomBuffer);
 	return instance;
 }
@@ -37,9 +47,11 @@ CipherInst *init(long randInit, int variability, int withdraw, long cryptLen)
 /**
  * Добавляет в настройки словарь.
  * @param dict указатель на словарь
- * @param указатель на настройки
+ * @param conf указатель на настройки
+ * @param dictLen длина словаря
+ * @return enum код возврата
  */
-ReturnCode setDictWithMemory(char *dict, CipherInst *conf)
+ReturnCode setDictWithMemory(char *dict, CipherInst *conf, long dictLen)
 {
 	if(conf->dict.dictInMemory)
 	{
@@ -50,11 +62,12 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf)
 	{
 		conf->dict.dictInMemory = dict;
 		conf->support->dictSelected = 0;
+		conf->dictLen = dictLen;
 		return OK;
 	}
 }
 
-ReturnCode setDictWithFile(FILE *dict, CipherInst *conf)
+ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, long dictLen)
 {
 	if(conf->dict.dictInFile)
 	{
@@ -65,6 +78,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf)
 	{
 		conf->dict.dictInFile = dict;
 		conf->support->dictSelected = 1;
+		conf->dictLen = dictLen;
 		return OK;
 	}
 }
@@ -73,8 +87,9 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf)
  * Добавляет в настройки кодируемые данные
  * @param data указатель на данные
  * @param указатель на настройки
+ * @param cryptLen длина кодируемой информации
  */
-ReturnCode setDataWithMemory(char *data, CipherInst *conf)
+ReturnCode setDataWithMemory(char *data, CipherInst *conf, long cryptLen)
 {
 	if(conf->data.cryptString)
 	{
@@ -85,11 +100,12 @@ ReturnCode setDataWithMemory(char *data, CipherInst *conf)
 	{
 		conf->data.cryptString = data;
 		conf->support->dataSelected = 0;
+		conf->cryptLen = cryptLen;
 		return OK;
 	}
 }
 
-ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
+ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen)
 {
 	if(conf->data.cryptFile)
 	{
@@ -100,6 +116,7 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
 	{
 		conf->data.cryptFile = data;
 		conf->support->dataSelected = 1;
+		conf->cryptLen = cryptLen;
 		return OK;
 	}
 }
@@ -111,6 +128,7 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf)
  */
 void freeInst(CipherInst *conf)
 {
+	free(conf->support->withdrawHistory);
 	free(conf->support);
 	free(conf);
 }

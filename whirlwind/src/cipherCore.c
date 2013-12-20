@@ -7,7 +7,7 @@
 
 #include "cipherCore.h"
 
-
+//TODO провести тайминг каждой функции.
 long *cryptOneSymbol(CipherInst *conf, char symbol)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
@@ -17,19 +17,20 @@ long *cryptOneSymbol(CipherInst *conf, char symbol)
 		return NULL;
 	}
 
-	long nextRandom = 0;
-	lrand48_r(&conf->support->randomBuffer, &nextRandom);	//случайно выбрать инициализатор для последовательности
+	long nextRandom = randVal(conf, conf->dictLen);	//случайно выбрать инициализатор для последовательности
 
 	//результат - позиция найденного символа + инициализатор
 	long *result = malloc(2*sizeof(long));
 	result[0] = charPos;
 	result[1] = nextRandom;
 
-	//TODO add withdraw
-	//TODO change dict
+	if(processWithdraw(conf, result))	//отката не было
+		processChange(conf, result);	//изменить словарь
 
 	return result;	//TODO free result (doc)
 }
+
+
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
@@ -38,9 +39,7 @@ long *cryptOneSymbol(CipherInst *conf, char symbol)
  */
 long findSymbolPosInDict(CipherInst *conf, char symbol)
 {
-	long charPos = 0;
-	lrand48_r(&conf->support->randomBuffer, &charPos);
-	charPos = charPos % conf->dictLen;
+	long charPos = randVal(conf, conf->dictLen);
 	for(long iterator = 0; iterator < conf->dictLen; iterator++)
 	{
 		if(conf->support->dictSelected==0)
@@ -52,7 +51,7 @@ long findSymbolPosInDict(CipherInst *conf, char symbol)
 		}
 		else
 		{//поиск словаря в файле
-
+			//TODO сделать поиск по файлу
 		}
 	}
 	return -1;

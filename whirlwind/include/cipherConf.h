@@ -21,6 +21,7 @@ typedef enum
 typedef struct
 {
 		long *withdrawHistory;		//данные для отката
+		int lastWithdraw;			//последний записанный откат
 		int withdrawCount;			//текущее значение отката
 		short dictSelected;			//0 - словарь в памяти, 1 - словарь в файле
 		short dataSelected;			//0 - дата в памяти, 1 - дата в файле
@@ -55,26 +56,30 @@ typedef struct
 
 /**
  * Инициализирует сущность с настройками шифра
+ * @param randInit - начальный инициализатор псевдослучайной последовательности
+ * @param variability - численное значение изменчивости словаря в % (от 1 до 100)
+ * @param withdraw - численное значение отката
  * @return указатель на сущность или NULL
  */
-extern CipherInst *init(long randInit, int variability, int withdraw,
-        long cryptLen);
+extern CipherInst *init(long randInit, int variability, int withdraw);
 
 /**
  * Добавляет в настройки словарь.
  * @param dict указатель на словарь
- * @param указатель на настройки
+ * @param conf указатель на настройки
+ * @param dictLen длина словаря
+ * @return enum код возврата
  */
-extern ReturnCode setDictWithMemory(char *dict, CipherInst *);
-extern ReturnCode setDictWithFile(FILE *dict, CipherInst *);
+extern ReturnCode setDictWithMemory(char *dict, CipherInst *conf, long dictLen);
+extern ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, long dictLen);
 
 /**
  * Добавляет в настройки кодируемые данные
  * @param data указатель на данные
  * @param указатель на настройки
  */
-extern ReturnCode setDataWithMemory(char *data, CipherInst *);
-extern ReturnCode setDataWithFile(FILE *data, CipherInst *);
+extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen);
+extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen);
 
 /**
  * Освобождает память, занятую под настройки шифра
