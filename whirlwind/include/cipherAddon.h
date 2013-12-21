@@ -8,8 +8,12 @@
 #ifndef CIPHERADDON_H_
 #define CIPHERADDON_H_
 
-#include "cipherConf.h"
+#include <time.h>
 #include <stdlib.h>
+
+#include "cipherConf.h"
+#include "cipherSupport.h"
+
 
 /**
  * Запоминает закодированный результат. Если подошло время отката - выполняет откат.

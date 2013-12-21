@@ -12,6 +12,8 @@
 
 /**
  * Возвращает случайное число, больше 0 и меньше max
+ * @param conf - рабочая конфигурация
+ * @param maxx - максимально допустимое значениеs
  */
 long randVal(CipherInst *conf, long max);
 

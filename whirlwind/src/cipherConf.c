@@ -128,7 +128,10 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen)
  */
 void freeInst(CipherInst *conf)
 {
+	printf("freeInst->withdrawHistory\n");
 	free(conf->support->withdrawHistory);
+	printf("freeInst->support\n");
 	free(conf->support);
+	printf("freeInst->conf\n");
 	free(conf);
 }

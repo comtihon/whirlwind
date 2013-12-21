@@ -8,6 +8,12 @@
 #include "cipherCore.h"
 
 //TODO провести тайминг каждой функции.
+/**
+ * Кодирует 1 символ. Возвращает массив - состоящий из пары шифросимволов.
+ * @param conf рабочая конфигурацияя
+ * @param symbol кодируемый символ
+ * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
+ */
 long *cryptOneSymbol(CipherInst *conf, char symbol)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ

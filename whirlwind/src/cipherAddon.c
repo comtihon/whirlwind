@@ -42,16 +42,16 @@ short processWithdraw(CipherInst *conf, long *result)
  */
 void withdraw(CipherInst *conf, long **extraPairs)
 {
+	long rand = 0;
 	//откатить все изменения, кроме последних двух
 	for (int i = conf->withdraw - 3; i >= 0; i -= 2)
 	{
 		srand48_r(conf->support->withdrawHistory[i], &conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
 			revertExtraChangeDict(conf, extraPairs);
-		переделать на взятие адреса - брать адрес с randVal и передавать в chaneDict
-		changeDict(conf, randVal(conf, conf->dictLen), conf->support->withdrawHistory[i - 1]);
+		rand = randVal(conf, conf->dictLen);
+		changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 	}
-
 	srand48_r(time(NULL), &conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 }
 
@@ -65,7 +65,6 @@ void processChange(CipherInst *conf, long *result)
 	srand48_r(result[1], &conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	changeDict(conf, result, &randomPos);	//поменять местами закодированный и случайный символ
-
 	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
 		extraChangeDict(conf);
 }
@@ -77,6 +76,8 @@ void processChange(CipherInst *conf, long *result)
  */
 void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 {
+	if(*firstPos == *secondPos) //если позиции равны
+		return;
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
@@ -85,7 +86,7 @@ void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 	}
 	else
 	{	//работа с файлом
-		//TODO сделать изменение по файлу
+	    //TODO сделать изменение по файлу
 	}
 }
 
@@ -118,5 +119,5 @@ void revertExtraChangeDict(CipherInst *conf, long **extraPairs)
 		extraPairs[i][1] = randVal(conf, conf->dictLen);
 	}
 	for (int i = conf->variability - 1; i >= 0; i--)//поменять местами обратно с конца - случайные места друг на друга
-		changeDict(conf, extraPairs[i][0], extraPairs[i][1]);
+		changeDict(conf, &extraPairs[i][0], &extraPairs[i][1]);
 }

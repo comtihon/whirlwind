@@ -3,6 +3,7 @@ project (whirlwind_test)
  
 set (PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(CMAKE_C_FLAGS "-std=c99") 
  
 set(TEST_SOURCE
 ${PROJECT_SOURCE_DIR}/main.c

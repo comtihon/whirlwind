@@ -8,7 +8,8 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-#include "string.h"
+#include <string.h>
+#include <time.h>
 
 #include "whirlwind/include/cipherConf.h"
 
