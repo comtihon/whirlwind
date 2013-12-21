@@ -30,6 +30,7 @@ int main()
 
 		for (int i = 0; i < dataLen; i++)
 		{
+			printf("%d of %d\n", i, dataLen-1);
 			long *tempRes = cryptOneSymbol(instance, dict[i]);
 			result[m++] = tempRes[0];
 			result[m++] = tempRes[1];

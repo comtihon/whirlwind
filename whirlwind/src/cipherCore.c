@@ -36,8 +36,6 @@ long *cryptOneSymbol(CipherInst *conf, char symbol)
 	return result;	//TODO free result (doc)
 }
 
-
-
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
  * @param conf	рабочая конфигурация

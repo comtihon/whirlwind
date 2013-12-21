@@ -53,6 +53,7 @@ void withdraw(CipherInst *conf, long **extraPairs)
 		changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 	}
 	srand48_r(time(NULL), conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
+	conf->support->withdrawCount = 0;	//обнулить счётчик откатов
 }
 
 /**
