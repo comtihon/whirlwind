@@ -18,6 +18,16 @@ typedef enum
 	DictAlreadySet
 } ReturnCode;
 
+typedef struct drand48_data
+{
+	unsigned short int __x[3];	/* Current state.  */
+	unsigned short int __old_x[3]; /* Old state.  */
+	unsigned short int __c;	/* Additive const. in congruential formula.  */
+	unsigned short int __init;	/* Flag for initializing.  */
+	__extension__ unsigned long long int __a;	/* Factor in congruential
+					   formula.  */
+}RandBuf;
+
 typedef struct
 {
 		long *withdrawHistory;		//данные для отката
@@ -25,7 +35,7 @@ typedef struct
 		int withdrawCount;			//текущее значение отката
 		short dictSelected;			//0 - словарь в памяти, 1 - словарь в файле
 		short dataSelected;			//0 - дата в памяти, 1 - дата в файле
-		struct drand48_data *randomBuffer;//буфер случайной последовательности (thread-safe).
+		RandBuf *randomBuffer;//буфер случайной последовательности (thread-safe).
 }Support;
 
 //структура настроек словаря

@@ -46,13 +46,13 @@ void withdraw(CipherInst *conf, long **extraPairs)
 	//откатить все изменения, кроме последних двух
 	for (int i = conf->withdraw - 3; i >= 0; i -= 2)
 	{
-		srand48_r(conf->support->withdrawHistory[i], &conf->support->randomBuffer);
+		srand48_r(conf->support->withdrawHistory[i], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
 			revertExtraChangeDict(conf, extraPairs);
 		rand = randVal(conf, conf->dictLen);
 		changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 	}
-	srand48_r(time(NULL), &conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
+	srand48_r(time(NULL), conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 }
 
 /**
@@ -62,7 +62,7 @@ void withdraw(CipherInst *conf, long **extraPairs)
  */
 void processChange(CipherInst *conf, long *result)
 {
-	srand48_r(result[1], &conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
+	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	changeDict(conf, result, &randomPos);	//поменять местами закодированный и случайный символ
 	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её

@@ -40,7 +40,8 @@ CipherInst *init(long randInit, int variability, int withdraw)
 
 	instance->variability = variability > 70? 70 : variability;
 	instance->withdraw = withdraw * 2;	//откат - сброс 2х значений (символ-инициализатор). Требуется удвоить.
-	srand48_r(randInit, &instance->support->randomBuffer);
+	instance->support->randomBuffer = malloc(sizeof(RandBuf));
+	srand48_r(randInit, instance->support->randomBuffer);
 	return instance;
 }
 
@@ -128,10 +129,8 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen)
  */
 void freeInst(CipherInst *conf)
 {
-	printf("freeInst->withdrawHistory\n");
 	free(conf->support->withdrawHistory);
-	printf("freeInst->support\n");
+	free(conf->support->randomBuffer);
 	free(conf->support);
-	printf("freeInst->conf\n");
 	free(conf);
 }

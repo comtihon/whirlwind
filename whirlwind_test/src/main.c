@@ -22,20 +22,19 @@ int main()
 
 		int dataLen = strlen(toCrypt);
 
-//	setDataWithMemory(toCrypt, instance, dataLen);
-//	setDictWithMemory(dict, instance, strlen(dict));
+		setDataWithMemory(toCrypt, instance, dataLen);
+		setDictWithMemory(dict, instance, strlen(dict));
 
-		printf("res size = %d\n", 2 * dataLen * sizeof(long));
 		long *result = malloc(2 * dataLen * sizeof(long));
 		int m = 0;
 
 		for (int i = 0; i < dataLen; i++)
 		{
-//		long *tempRes = cryptOneSymbol(instance, dict[i]);
-//		result[m++] = tempRes[0];
-//		result[m++] = tempRes[1];
-//		printf("%c = %d - %d\n", dict[i], tempRes[0], tempRes[1]);
-//		free(tempRes);
+			long *tempRes = cryptOneSymbol(instance, dict[i]);
+			result[m++] = tempRes[0];
+			result[m++] = tempRes[1];
+			printf("%c = %d - %d\n", dict[i], tempRes[0], tempRes[1]);
+			free(tempRes);
 		}
 
 		printf("free result\n");
@@ -45,5 +44,6 @@ int main()
 		printf("free dict\n");
 	}
 	free(dict);
+
 	return 0;
 }
