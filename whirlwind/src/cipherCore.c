@@ -12,9 +12,10 @@
  * Кодирует 1 символ. Возвращает массив - состоящий из пары шифросимволов.
  * @param conf рабочая конфигурацияя
  * @param symbol кодируемый символ
+ * @param result указатель на результат - long[2]
  * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
  */
-long *cryptOneSymbol(CipherInst *conf, char symbol)
+long *cryptOneSymbol(CipherInst *conf, char symbol, long *result)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
 	if(charPos==-1)
@@ -26,14 +27,13 @@ long *cryptOneSymbol(CipherInst *conf, char symbol)
 	long nextRandom = randVal(conf, conf->dictLen);	//случайно выбрать инициализатор для последовательности
 
 	//результат - позиция найденного символа + инициализатор
-	long *result = malloc(2*sizeof(long));
 	result[0] = charPos;
 	result[1] = nextRandom;
 
 	if(processWithdraw(conf, result))	//отката не было
 		processChange(conf, result);	//изменить словарь
 
-	return result;	//TODO free result (doc)
+	return result;
 }
 
 /**

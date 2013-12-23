@@ -26,23 +26,22 @@ int main()
 		setDictWithMemory(dict, instance, strlen(dict));
 
 		long *result = malloc(2 * dataLen * sizeof(long));
+		long *tempRes = malloc(2*sizeof(long));
 		int m = 0;
 
 		for (int i = 0; i < dataLen; i++)
 		{
 			printf("%d of %d\n", i, dataLen-1);
-			long *tempRes = cryptOneSymbol(instance, dict[i]);
+			cryptOneSymbol(instance, dict[i], tempRes);
 			result[m++] = tempRes[0];
 			result[m++] = tempRes[1];
 			printf("%c = %d - %d\n", dict[i], tempRes[0], tempRes[1]);
-			free(tempRes);
-		}
 
-		printf("free result\n");
+		}
+		free(tempRes);
+
 		free(result);
-		printf("free instance\n");
 		freeInst(instance);
-		printf("free dict\n");
 	}
 	free(dict);
 
