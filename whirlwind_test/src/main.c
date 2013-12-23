@@ -45,18 +45,12 @@ int main()
 			printf("%c = %d - %d\n", dict[i], tempRes[0], tempRes[1]);
 
 		}
-		printf("1\n");
 		free(tempRes);
-		printf("2\n");
 		free(result);
-		printf("3\n");
 		freeInst(instance);
-		printf("4\n");
 	}
 	free(dict);
-	printf("5\n");
 	free(original);
-	printf("6\n");
 
 	return 0;
 }

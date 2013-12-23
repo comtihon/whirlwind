@@ -65,7 +65,7 @@ void processChange(CipherInst *conf, long *result)
 {
 	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
-	changeDict(conf, result, &randomPos);	//поменять местами закодированный и случайный символ
+	changeDict(conf, &result[0], &randomPos);	//поменять местами закодированный и случайный символ
 	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
 		extraChangeDict(conf);
 }
@@ -83,7 +83,7 @@ void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
-		conf->dict.dictInMemory[*secondPos] = buf;
+		conf->dict.dictInMemory[*firstPos] = buf;
 	}
 	else
 	{	//работа с файлом

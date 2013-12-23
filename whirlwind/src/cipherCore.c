@@ -18,7 +18,6 @@
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
-	printf("char pos = %d\n", charPos);
 	if(charPos==-1)
 	{
 		printf("Can't find symbol '%c'[%d] in dict!\n", symbol, symbol);
