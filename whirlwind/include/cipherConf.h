@@ -15,7 +15,8 @@ typedef enum
 {
 	OK,
 	DataAlreadySet,
-	DictAlreadySet
+	DictAlreadySet,
+	SymbolNotFoundInDict
 } ReturnCode;
 
 typedef struct drand48_data

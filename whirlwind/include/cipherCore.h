@@ -19,7 +19,7 @@
  * @param result указатель на результат - long[2]
  * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
  */
-extern long *cryptOneSymbol(CipherInst *conf, char symbol, long *result);
+extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result);
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.

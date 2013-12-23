@@ -15,26 +15,49 @@
  * @param result указатель на результат - long[2]
  * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
  */
-long *cryptOneSymbol(CipherInst *conf, char symbol, long *result)
+ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
+	printf("char pos = %d\n", charPos);
 	if(charPos==-1)
 	{
-		printf("Can't find symbol %s[%d] in dict!\n", symbol, symbol);
-		return NULL;
+		printf("Can't find symbol '%c'[%d] in dict!\n", symbol, symbol);
+		return SymbolNotFoundInDict;
 	}
-
 	long nextRandom = randVal(conf, conf->dictLen);	//случайно выбрать инициализатор для последовательности
 
 	//результат - позиция найденного символа + инициализатор
 	result[0] = charPos;
 	result[1] = nextRandom;
-
 	if(processWithdraw(conf, result))	//отката не было
 		processChange(conf, result);	//изменить словарь
-
-	return result;
+	return OK;
 }
+
+ReturnCode decryptOneSymbol(CipherInst *conf, long *pair, char *result)
+{
+	if(conf->support->dictSelected==0)
+	{//работа со словарём в оперативной памяти
+		result[0] = conf->dict.dictInMemory[pair[0]];
+		srand48_r(pair[1], conf->support->randomBuffer);
+		long randNum = randVal(conf, conf->dictLen);
+
+		if(processWithdraw(conf, pair))	//отката не было
+		{
+			changeDict(conf, &pair[0], &randNum);
+			if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
+				extraChangeDict(conf);
+		}
+	}
+	else
+	{//работа со словарём в файле
+		//TODO реализовать
+	}
+
+	return OK;
+}
+
+
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
