@@ -22,6 +22,15 @@
 extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result);
 
 /**
+ * Декодирует пару шифрокодов в 1 символ.
+ * @param conf - рабочая конфигурация
+ * @param pair - пара шифросимволов - long[2]
+ * @param result - указатель на символ, в который нужно записать результат
+ * @return код возврата (ошибка либо успех)
+ */
+extern ReturnCode decryptOneSymbol(CipherInst *conf, long *pair, char *result);
+
+/**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
  * @param conf	рабочая конфигурация
  * @param symbol кодируемый символ

@@ -41,6 +41,11 @@ CipherInst *init(long randInit, int variability, int withdraw)
 	instance->variability = variability > 70? 70 : variability;
 	instance->withdraw = withdraw * 2;	//откат - сброс 2х значений (символ-инициализатор). Требуется удвоить.
 	instance->support->randomBuffer = malloc(sizeof(RandBuf));
+	if(!instance->support->randomBuffer)
+	{
+		printf("Error allocating space for support's random buffer struct!\n");
+		return NULL;
+	}
 	srand48_r(randInit, instance->support->randomBuffer);
 	return instance;
 }

@@ -13,4 +13,8 @@
 
 #include "whirlwind/include/cipherConf.h"
 
+void cryptTest(long *result, char *toCrypt, int dataLen);
+
+void decryptTest(char *result, long *pairs, int dataLen);
+
 #endif /* MAIN_H_ */

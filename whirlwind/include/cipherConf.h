@@ -16,7 +16,8 @@ typedef enum
 	OK,
 	DataAlreadySet,
 	DictAlreadySet,
-	SymbolNotFoundInDict
+	SymbolNotFoundInDict,
+	ErrorAllocatingMemory = -1
 } ReturnCode;
 
 typedef struct drand48_data

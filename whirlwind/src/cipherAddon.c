@@ -11,7 +11,7 @@
  * Запоминает закодированный результат. Если подошло время отката - выполняет откат.
  * @param conf - конфигурация
  * @param result - указатель на результат шифрования (пара ключ-инициализатор)
- * @return 0 - откат выполнен, 1 - откат не нужно выполнять.
+ * @return 0 - откат выполнен, 1 - откат не нужно выполнять, ErrorAllocatingMemory - произошла ошибка
  */
 short processWithdraw(CipherInst *conf, long *result)
 {
@@ -21,8 +21,23 @@ short processWithdraw(CipherInst *conf, long *result)
 	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
 		long **extraPairs = malloc(conf->variability * sizeof(long *));	//выделить память под случайные числа
-		for (int i = 0; i < conf->variability; i++)
-			extraPairs[i] = malloc(2 * sizeof(long));
+		if (extraPairs)
+		{
+			for (int i = 0; i < conf->variability; i++)
+			{
+				extraPairs[i] = malloc(2 * sizeof(long));
+				if (!extraPairs[i])
+				{
+					printf("Error allocating space for widthraw support [i]!\n", i);
+					return ErrorAllocatingMemory;
+				}
+			}
+		}
+		else
+		{
+			printf("Error allocating space for widthraw support!\n");
+			return ErrorAllocatingMemory;
+		}
 
 		withdraw(conf, extraPairs);	//выполнить откаты
 
@@ -52,7 +67,7 @@ void withdraw(CipherInst *conf, long **extraPairs)
 		rand = randVal(conf, conf->dictLen);
 		changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 	}
-	srand48_r(time(NULL), conf->support->randomBuffer);//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
+	srand48_r(time(NULL), conf->support->randomBuffer);	//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 	conf->support->withdrawCount = 0;	//обнулить счётчик откатов
 }
 
@@ -77,7 +92,7 @@ void processChange(CipherInst *conf, long *result)
  */
 void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 {
-	if(*firstPos == *secondPos) //если позиции равны
+	if (*firstPos == *secondPos) //если позиции равны
 		return;
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
@@ -87,7 +102,7 @@ void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 	}
 	else
 	{	//работа с файлом
-	    //TODO сделать изменение по файлу
+		//TODO сделать изменение по файлу
 	}
 }
 
