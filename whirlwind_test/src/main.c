@@ -11,17 +11,18 @@
 
 int main()
 {
-	char *toCrypt = "very secret hello world";
+	char *toCrypt = "very secret hello world very secret hello world very secret hello world very secret hello world";
 	int dataLen = strlen(toCrypt);
 
+	char *toDecrypt = malloc(dataLen);
 	long *result = malloc(2 * dataLen * sizeof(long));
 
 	cryptTest(result, toCrypt, dataLen);
 	printf("crypt finished\n");
-	decryptTest(NULL, result, dataLen);
-	printf("decrypt finished\n");
+	decryptTest(toDecrypt, result, dataLen);
+	printf("decrypt finished: %s\n", toDecrypt);
 	free(result);
-
+	free(toDecrypt);
 	return 0;
 }
 
@@ -50,7 +51,6 @@ void cryptTest(long *result, char *toCrypt, int dataLen)
 			}
 			result[m++] = tempRes[0];
 			result[m++] = tempRes[1];
-			printf("%c = %d - %d\n", dict[i], tempRes[0], tempRes[1]);
 
 		}
 		free(tempRes);
@@ -74,18 +74,19 @@ void decryptTest(char *result, long *pairs, int dataLen)
 		int m = 0;
 
 		long temp[2];
+		int iter = 0;
 
-		for (int i = 0; i < dataLen; i+=2)
+		for (int i = 0; i < dataLen; i++)
 		{
-			temp[0] = pairs[i];
-			temp[1] = pairs[i+1];
-			printf("%d of %d\n", i, dataLen - 1);
+			temp[0] = pairs[iter++];
+			temp[1] = pairs[iter++];
+			printf("%d of %d\n", i, dataLen *2);
 			if (decryptOneSymbol(instance, temp, &tempRes) != OK)
 			{
 				printf("Error decrypting pair %ld - %ld\n", pairs[i], pairs[i]);
 				break;
 			}
-			printf("%c", tempRes);
+			result[i] = tempRes;
 		}
 	}
 	freeInst(instance);
