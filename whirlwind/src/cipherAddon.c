@@ -63,7 +63,7 @@ void withdraw(CipherInst *conf, long **extraPairs)
 	{
 		srand48_r(conf->support->withdrawHistory[i], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
-			revertExtraChangeDict(conf, extraPairs);
+		    revertExtraChangeDict(conf, extraPairs);
 		rand = randVal(conf, conf->dictLen);
 		changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 	}
@@ -82,7 +82,7 @@ void processChange(CipherInst *conf, long *result)
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	changeDict(conf, &result[0], &randomPos);	//поменять местами закодированный и случайный символ
 	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
-		extraChangeDict(conf);
+	    extraChangeDict(conf);
 }
 
 /**
@@ -93,7 +93,7 @@ void processChange(CipherInst *conf, long *result)
 void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 {
 	if (*firstPos == *secondPos) //если позиции равны
-		return;
+	    return;
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
@@ -102,7 +102,19 @@ void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 	}
 	else
 	{	//работа с файлом
-		//TODO сделать изменение по файлу
+		char buf1;
+		fseek(conf->data.cryptFile, *firstPos, SEEK_SET);
+		fread(&buf1, 1, conf->dictLen, conf->data.cryptFile);
+
+		char buf2;
+		fseek(conf->data.cryptFile, *secondPos, SEEK_SET);
+		fread(&buf2, 1, conf->dictLen, conf->data.cryptFile);
+
+		fseek(conf->data.cryptFile, *firstPos, SEEK_SET);
+		fwrite(&buf2 , 1, 1, conf->data.cryptFile);
+
+		fseek(conf->data.cryptFile, *secondPos, SEEK_SET);
+		fwrite(&buf1 , 1, 1, conf->data.cryptFile);
 	}
 }
 
