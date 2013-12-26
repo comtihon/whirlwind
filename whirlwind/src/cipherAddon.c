@@ -20,7 +20,7 @@ short processWithdraw(CipherInst *conf, unsigned long *result)
 
 	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
-		long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));	//выделить память под случайные числа
+		unsigned long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));	//выделить память под случайные числа
 		if (extraPairs)
 		{
 			for (int i = 0; i < conf->variability; i++)
@@ -104,18 +104,18 @@ void changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *second
 	{	//работа с файлом
 		//TODO FileStreamIsClosed check and return!
 		char buf1;
-		fseek(conf->data.cryptFile, *firstPos, SEEK_SET);
-		fread(&buf1, 1, conf->dictLen, conf->data.cryptFile);
+		fseek(conf->dict.dictInFile, *firstPos, SEEK_SET);
+		fread(&buf1, 1, conf->dictLen, conf->dict.dictInFile);
 
 		char buf2;
-		fseek(conf->data.cryptFile, *secondPos, SEEK_SET);
-		fread(&buf2, 1, conf->dictLen, conf->data.cryptFile);
+		fseek(conf->dict.dictInFile, *secondPos, SEEK_SET);
+		fread(&buf2, 1, conf->dictLen, conf->dict.dictInFile);
 
-		fseek(conf->data.cryptFile, *firstPos, SEEK_SET);
-		fwrite(&buf2 , 1, 1, conf->data.cryptFile);
+		fseek(conf->dict.dictInFile, *firstPos, SEEK_SET);
+		fwrite(&buf2 , 1, 1, conf->dict.dictInFile);
 
-		fseek(conf->data.cryptFile, *secondPos, SEEK_SET);
-		fwrite(&buf1 , 1, 1, conf->data.cryptFile);
+		fseek(conf->dict.dictInFile, *secondPos, SEEK_SET);
+		fwrite(&buf1 , 1, 1, conf->dict.dictInFile);
 	}
 }
 

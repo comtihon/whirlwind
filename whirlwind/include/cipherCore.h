@@ -8,6 +8,8 @@
 #ifndef CIPHERCORE_H_
 #define CIPHERCORE_H_
 
+#define MAX_FILE_BUF_SIZE 1000000
+
 #include "cipherSupport.h"
 #include "cipherConf.h"
 #include "cipherAddon.h"
@@ -46,5 +48,13 @@ unsigned long findSymbolPosInDict(CipherInst *conf, char symbol);
  * @return позицию символа в памяти или -1, если символ в памяти отсутствует
  */
 unsigned long findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol);
+
+/**
+ * Медленный поиск, который не использует буфер в оперативной памяти.
+ * @param conf - рабочая конфигурация
+ * @param symbol - символ, который требуется найти
+ * @return позиция символа или ошибка
+ */
+unsigned long findSymbolInFile(CipherInst *conf, char symbol);
 
 #endif /* CIPHERCORE_H_ */

@@ -18,7 +18,7 @@
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 {
 	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
-	switch(charPos)
+	switch (charPos)
 	{
 		case FileStreamIsClosed:
 			printf("Can't read dict's file!\n");
@@ -53,22 +53,23 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
  */
 ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 {
-	if (conf->support->dictSelected == 0)
-	{			//работа со словарём в оперативной памяти
-		result[0] = conf->dict.dictInMemory[pair[0]];
-		srand48_r(pair[1], conf->support->randomBuffer);
-		long randNum = randVal(conf, conf->dictLen);
 
-		if (processWithdraw(conf, pair))	//отката не было
-		{
-			changeDict(conf, &pair[0], &randNum);
-			if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
-				extraChangeDict(conf);
-		}
-	}
+	if (conf->support->dictSelected == 0)	//работа со словарём в оперативной памяти
+		result[0] = conf->dict.dictInMemory[pair[0]];
 	else
 	{	//работа со словарём в файле
-		//TODO реализовать
+		fseek(conf->data.cryptFile, pair[0], SEEK_SET);
+		fread(result, 1, conf->dictLen, conf->dict.dictInFile);
+	}
+
+	srand48_r(pair[1], conf->support->randomBuffer);
+	long randNum = randVal(conf, conf->dictLen);
+
+	if (processWithdraw(conf, pair))	//отката не было
+	{
+		changeDict(conf, &pair[0], &randNum);
+		if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
+			extraChangeDict(conf);
 	}
 
 	return OK;
@@ -82,28 +83,75 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
  */
 unsigned long findSymbolPosInDict(CipherInst *conf, char symbol)
 {
-	long charPos = randVal(conf, conf->dictLen);	//случайная позиция, с которой будет производиться поиск символа
+	long charPos;	//случайная позиция, с которой будет производиться поиск символа
 	if (conf->support->dictSelected == 0)	//если символ в памяти - произвести поиск и вернуть результат
-		return findSymbolInMemory(conf->dict.dictInMemory, conf->dictLen, charPos, symbol);
-
-	if(conf->dictLen < 1000000)
 	{
-		if(!conf->dict.dictInFile)	//файловый сокет закрыт
+		charPos = randVal(conf, conf->dictLen);
+		return findSymbolInMemory(conf->dict.dictInMemory, conf->dictLen, charPos, symbol);
+	}
+
+	int cycles = 0;
+	long partLen = 0;
+	long readRes;
+	char *buffer = NULL;
+
+	for (long i = 0; i <= conf->dictLen / MAX_FILE_BUF_SIZE; i++)
+	{	//TODO каким-то образом поменять return, т.к. он unsigned, а ошибки < 0
+		if (!conf->dict.dictInFile)	//файловый сокет закрыт
 			return FileStreamIsClosed;	//дальнейший поиск невозможен
-		//TODO каким-то образом поменять return, т.к. он unsigned, а ошибки < 0
 
-		char *buffer = malloc(conf->dictLen);
-		if(!buffer)	//TODO вместо возвращения ошибки реализовать поиск перебором с буфером в 1 байт
-			return ErrorAllocatingMemory;
+		if (!buffer)
+		{
+			buffer = malloc(partLen);	//можно выделять место под буфер
+			if(!buffer)
+				return findSymbolInFile(conf, symbol);
+		}
 
-		long readRes = fread (buffer, 1, conf->dictLen, conf->dict.dictInFile);	//считать весь файл в буфер
+		long readRes = fread(buffer, 1, conf->dictLen, conf->dict.dictInFile);	//считать весь файл в буфер
 		//  if (readRes != conf->dictLen)	//TODO обработка ошибки чтения
 
+		charPos = randVal(conf, conf->dictLen);
 		long result = findSymbolInMemory(buffer, conf->dictLen, charPos, symbol);	//ищем символ по буферу
-		free(buffer);
-		return result;
+		if (result > 0)
+		{
+			free(buffer);
+			result = ftell(conf->dict.dictInFile) - 1;
+			return result;
+		}
 	}
-	return -1;
+
+	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
+}
+
+
+
+/**
+ * Медленный поиск, который не использует буфер в оперативной памяти.
+ * @param conf - рабочая конфигурация
+ * @param symbol - символ, который требуется найти
+ * @return позиция символа или ошибка
+ */
+unsigned long findSymbolInFile(CipherInst *conf, char symbol)
+{
+	char verySmallBuffer;
+
+	fseek(conf->dict.dictInFile, 0, SEEK_END);	//определение размера файла
+	unsigned long fileSize = ftell(conf->dict.dictInFile);
+
+	unsigned long charPos = randVal(conf, conf->dictLen);	//поиск со случайного места
+	fseek(conf->dict.dictInFile, charPos, SEEK_SET);
+
+	for (unsigned long iterator = 0; iterator < fileSize; iterator++)
+	{
+		if (charPos + iterator == fileSize)		//обнуление позиции поиска
+		{
+			charPos = 0;
+			rewind(conf->dict.dictInFile);				//поиск по файлу сначала
+		}
+		if (fgetc(conf->dict.dictInFile) == symbol)
+			return ftell(conf->dict.dictInFile) - 1;
+	}
+	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
 }
 
 /**
@@ -123,6 +171,6 @@ unsigned long findSymbolInMemory(char *memory, unsigned long memLength, unsigned
 		if (memory[start + iterator] == symbol)
 			return start + iterator;
 	}
-	return -1;
+	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
 }
 
