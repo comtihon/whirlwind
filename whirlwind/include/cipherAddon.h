@@ -21,28 +21,28 @@
  * @param result - указатель на результат шифрования (пара ключ-инициализатор)
  * @return 0 - откат выполнен, 1 - откат не нужно выполнять.
  */
-short processWithdraw(CipherInst *conf, long *result);
+short processWithdraw(CipherInst *conf, unsigned long *result);
 
 /**
  * Производит откаты
  * @param conf - рабочая конфигурация
  * @param extraPairs - память для организации рекурсии случайных чисел
  */
-void withdraw(CipherInst *conf, long **extraPairs);
+void withdraw(CipherInst *conf, unsigned long **extraPairs);
 
 /**
  * Обрабатывает изменение словаря
  * @param conf - рабочая конфигурация
  * @param result - результат кодирования [позиция кодируемого символа, случайный инициализатор]
  */
-void processChange(CipherInst *conf, long *result);
+void processChange(CipherInst *conf, unsigned long *result);
 
 /**
  * Меняет в словаре местами 2 символа.
  * @param firstPos - указатель на позицию первого символ
  * @param secondPos - указатель на позицию второго символа
  */
-void changeDict(CipherInst *conf, long *firstPos, long *secondPos);
+void changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos);
 
 /**
  * Производит дополнительные изменения в словаре
@@ -55,6 +55,6 @@ void extraChangeDict(CipherInst *conf);
  * @param conf - рабочая конфигурация
  * @param extraPairs - N случайных чисел. Генерируются и используются рекурсино.
  */
-void revertExtraChangeDict(CipherInst *conf, long **extraPairs);
+void revertExtraChangeDict(CipherInst *conf, unsigned long **extraPairs);
 
 #endif /* CIPHERADDON_H_ */

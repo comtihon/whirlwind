@@ -19,7 +19,7 @@
  * @param result указатель на результат - long[2]
  * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
  */
-extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result);
+extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result);
 
 /**
  * Декодирует пару шифрокодов в 1 символ.
@@ -28,14 +28,23 @@ extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, long *result);
  * @param result - указатель на символ, в который нужно записать результат
  * @return код возврата (ошибка либо успех)
  */
-extern ReturnCode decryptOneSymbol(CipherInst *conf, long *pair, char *result);
+extern ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result);
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
  * @param conf	рабочая конфигурация
  * @param symbol кодируемый символ
  */
-long findSymbolPosInDict(CipherInst *conf, char symbol);
+unsigned long findSymbolPosInDict(CipherInst *conf, char symbol);
 
+/**
+ * Производит поиск по памяти
+ * @param memory - указатель на память
+ * @param memLength - длина памяти
+ * @param start - откуда искать
+ * @param symbol - что искать
+ * @return позицию символа в памяти или -1, если символ в памяти отсутствует
+ */
+unsigned long findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol);
 
 #endif /* CIPHERCORE_H_ */

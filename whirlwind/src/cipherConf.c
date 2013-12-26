@@ -31,7 +31,7 @@ CipherInst *init(long randInit, int variability, int withdraw)
 	}
 	instance->support->lastWithdraw=0;
 
-	instance->support->withdrawHistory = malloc(2 * withdraw * sizeof(long));
+	instance->support->withdrawHistory = malloc(2 * withdraw * sizeof(unsigned long));
 	if(!instance->support->withdrawHistory)
 	{
 		printf("Error allocating space for support's withdraw history!\n");
@@ -57,7 +57,7 @@ CipherInst *init(long randInit, int variability, int withdraw)
  * @param dictLen длина словаря
  * @return enum код возврата
  */
-ReturnCode setDictWithMemory(char *dict, CipherInst *conf, long dictLen)
+ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen)
 {
 	if(conf->dict.dictInMemory)
 	{
@@ -73,7 +73,7 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf, long dictLen)
 	}
 }
 
-ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, long dictLen)
+ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
 {
 	if(conf->dict.dictInFile)
 	{
@@ -95,7 +95,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, long dictLen)
  * @param указатель на настройки
  * @param cryptLen длина кодируемой информации
  */
-ReturnCode setDataWithMemory(char *data, CipherInst *conf, long cryptLen)
+ReturnCode setDataWithMemory(char *data, CipherInst *conf, unsigned long cryptLen)
 {
 	if(conf->data.cryptString)
 	{
@@ -111,7 +111,7 @@ ReturnCode setDataWithMemory(char *data, CipherInst *conf, long cryptLen)
 	}
 }
 
-ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen)
+ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen)
 {
 	if(conf->data.cryptFile)
 	{

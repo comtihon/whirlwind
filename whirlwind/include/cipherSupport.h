@@ -15,6 +15,6 @@
  * @param conf - рабочая конфигурация
  * @param maxx - максимально допустимое значениеs
  */
-long randVal(CipherInst *conf, long max);
+unsigned long randVal(CipherInst *conf, unsigned long max);
 
 #endif /* CIPHERSUPPORT_H_ */

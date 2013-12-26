@@ -16,8 +16,9 @@ typedef enum
 	OK,
 	DataAlreadySet,
 	DictAlreadySet,
-	SymbolNotFoundInDict,
-	ErrorAllocatingMemory = -1
+	SymbolNotFoundInDict = -1,
+	ErrorAllocatingMemory = -2,
+	FileStreamIsClosed = -3
 } ReturnCode;
 
 typedef struct drand48_data
@@ -32,7 +33,7 @@ typedef struct drand48_data
 
 typedef struct
 {
-		long *withdrawHistory;		//данные для отката
+		unsigned long *withdrawHistory;		//данные для отката
 		int lastWithdraw;			//последний записанный откат
 		int withdrawCount;			//текущее значение отката
 		short dictSelected;			//0 - словарь в памяти, 1 - словарь в файле
@@ -49,7 +50,7 @@ typedef struct
 				char *dictInMemory;	//указатель на память с заранее считанным словарём
 				FILE *dictInFile;	//указатель на файл со словарём
 		} dict;
-		long cryptLen;				//длина кодируемой информации
+		unsigned long cryptLen;				//длина кодируемой информации
 
 		//дата, которую нужно зашифровать
 		union Data
@@ -57,7 +58,7 @@ typedef struct
 				char *cryptString;	//указатель на строку в памяти
 				FILE *cryptFile;	//укзаатель на файл
 		} data;
-		long dictLen;				//длина словаря
+		unsigned long dictLen;				//длина словаря
 
 		Support *support;
 
@@ -82,16 +83,16 @@ extern CipherInst *init(long randInit, int variability, int withdraw);
  * @param dictLen длина словаря
  * @return enum код возврата
  */
-extern ReturnCode setDictWithMemory(char *dict, CipherInst *conf, long dictLen);
-extern ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, long dictLen);
+extern ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen);
+extern ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen);
 
 /**
  * Добавляет в настройки кодируемые данные
  * @param data указатель на данные
  * @param указатель на настройки
  */
-extern ReturnCode setDataWithMemory(char *data, CipherInst *conf, long cryptLen);
-extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, long cryptLen);
+extern ReturnCode setDataWithMemory(char *data, CipherInst *conf, unsigned long cryptLen);
+extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen);
 
 /**
  * Освобождает память, занятую под настройки шифра

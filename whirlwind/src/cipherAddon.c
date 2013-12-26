@@ -13,19 +13,19 @@
  * @param result - указатель на результат шифрования (пара ключ-инициализатор)
  * @return 0 - откат выполнен, 1 - откат не нужно выполнять, ErrorAllocatingMemory - произошла ошибка
  */
-short processWithdraw(CipherInst *conf, long *result)
+short processWithdraw(CipherInst *conf, unsigned long *result)
 {
 	for (int i = 0; i < 2; i++)	//сохранение данных для отката
 		conf->support->withdrawHistory[conf->support->withdrawCount++] = result[i];
 
 	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
-		long **extraPairs = malloc(conf->variability * sizeof(long *));	//выделить память под случайные числа
+		long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));	//выделить память под случайные числа
 		if (extraPairs)
 		{
 			for (int i = 0; i < conf->variability; i++)
 			{
-				extraPairs[i] = malloc(2 * sizeof(long));
+				extraPairs[i] = malloc(2 * sizeof(unsigned long));
 				if (!extraPairs[i])
 				{
 					printf("Error allocating space for widthraw support [i]!\n", i);
@@ -55,7 +55,7 @@ short processWithdraw(CipherInst *conf, long *result)
  * @param conf - рабочая конфигурация
  * @param extraPairs - память для организации рекурсии случайных чисел
  */
-void withdraw(CipherInst *conf, long **extraPairs)
+void withdraw(CipherInst *conf, unsigned long **extraPairs)
 {
 	long rand = 0;
 	//откатить все изменения, кроме последних двух
@@ -76,7 +76,7 @@ void withdraw(CipherInst *conf, long **extraPairs)
  * @param conf - рабочая конфигурация
  * @param result - результат кодирования [позиция кодируемого символа, случайный инициализатор]
  */
-void processChange(CipherInst *conf, long *result)
+void processChange(CipherInst *conf, unsigned long *result)
 {
 	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
@@ -90,7 +90,7 @@ void processChange(CipherInst *conf, long *result)
  * @param firstPos - указатель на позицию первого символ
  * @param secondPos - указатель на позицию второго символа
  */
-void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
+void changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos)
 {
 	if (*firstPos == *secondPos) //если позиции равны
 	    return;
@@ -102,6 +102,7 @@ void changeDict(CipherInst *conf, long *firstPos, long *secondPos)
 	}
 	else
 	{	//работа с файлом
+		//TODO FileStreamIsClosed check and return!
 		char buf1;
 		fseek(conf->data.cryptFile, *firstPos, SEEK_SET);
 		fread(&buf1, 1, conf->dictLen, conf->data.cryptFile);
@@ -139,7 +140,7 @@ void extraChangeDict(CipherInst *conf)
  * @param conf - рабочая конфигурация
  * @param extraPairs - N случайных чисел. Генерируются и используются рекурсино.
  */
-void revertExtraChangeDict(CipherInst *conf, long **extraPairs)
+void revertExtraChangeDict(CipherInst *conf, unsigned long **extraPairs)
 {
 	for (int i = 0; i < conf->variability; i++)	//достать случайные значения
 	{
