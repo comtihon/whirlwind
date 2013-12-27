@@ -17,8 +17,9 @@
  */
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 {
-	long charPos = findSymbolPosInDict(conf, symbol);	//найти кодируемый символ
-	switch (charPos)
+	long charPos;
+	switch (findSymbolPosInDict(conf, symbol, &charPos))
+	//найти кодируемый символ
 	{
 		case FileStreamIsClosed:
 			printf("Can't read dict's file!\n");
@@ -34,10 +35,9 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 	result[1] = nextRandom;
 	switch (processWithdraw(conf, result))
 	{
-		case 1:								//отката не было
-			processChange(conf, result);	//изменить словарь
-			return OK;
-		case 0:								//был откат, перестановка не нужна
+		case OK:								//отката не было
+			return processChange(conf, result);	//изменить словарь
+		case Withdraw:								//был откат, перестановка не нужна
 			return OK;
 		case ErrorAllocatingMemory:			//произошла ошибка выделения памяти
 			return ErrorAllocatingMemory;
@@ -53,7 +53,7 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
  */
 ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 {
-
+	ReturnCode ret = OK;
 	if (conf->support->dictSelected == 0)	//работа со словарём в оперативной памяти
 		result[0] = conf->dict.dictInMemory[pair[0]];
 	else
@@ -65,29 +65,31 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 	srand48_r(pair[1], conf->support->randomBuffer);
 	long randNum = randVal(conf, conf->dictLen);
 
-	if (processWithdraw(conf, pair))	//отката не было
+	if (processWithdraw(conf, pair) == OK)	//отката не было
 	{
-		changeDict(conf, &pair[0], &randNum);
+		if ((ret = changeDict(conf, &pair[0], &randNum)) != OK)
+			return ret;
 		if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
 			extraChangeDict(conf);
 	}
 
-	return OK;
+	return ret;
 }
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
  * @param conf	рабочая конфигурация
  * @param symbol кодируемый символ
- * @return - позиция символа, -1, если символ отсутствует, различные ошибки
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolPosInDict(CipherInst *conf, char symbol)
+ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *result)
 {
 	long charPos;	//случайная позиция, с которой будет производиться поиск символа
 	if (conf->support->dictSelected == 0)	//если символ в памяти - произвести поиск и вернуть результат
 	{
 		charPos = randVal(conf, conf->dictLen);
-		return findSymbolInMemory(conf->dict.dictInMemory, conf->dictLen, charPos, symbol);
+		return findSymbolInMemory(conf->dict.dictInMemory, conf->dictLen, charPos, symbol, result);
 	}
 
 	int cycles = 0;
@@ -96,42 +98,40 @@ unsigned long findSymbolPosInDict(CipherInst *conf, char symbol)
 	char *buffer = NULL;
 
 	for (long i = 0; i <= conf->dictLen / MAX_FILE_BUF_SIZE; i++)
-	{	//TODO каким-то образом поменять return, т.к. он unsigned, а ошибки < 0
+	{
 		if (!conf->dict.dictInFile)	//файловый сокет закрыт
 			return FileStreamIsClosed;	//дальнейший поиск невозможен
 
 		if (!buffer)
 		{
 			buffer = malloc(partLen);	//можно выделять место под буфер
-			if(!buffer)
-				return findSymbolInFile(conf, symbol);
+			if (!buffer)	//недостаточно места в памяти
+				return findSymbolInFile(conf, symbol, result);	//произвести медленный поиск
 		}
 
 		long readRes = fread(buffer, 1, conf->dictLen, conf->dict.dictInFile);	//считать весь файл в буфер
 		//  if (readRes != conf->dictLen)	//TODO обработка ошибки чтения
 
 		charPos = randVal(conf, conf->dictLen);
-		long result = findSymbolInMemory(buffer, conf->dictLen, charPos, symbol);	//ищем символ по буферу
-		if (result > 0)
+		if (findSymbolInMemory(buffer, conf->dictLen, charPos, symbol, result) == OK)	//ищем символ по буферу
 		{
 			free(buffer);
-			result = ftell(conf->dict.dictInFile) - 1;
-			return result;
+			*result = ftell(conf->dict.dictInFile) - *result;//TODO неверное вычисление. Придётся рассчитывать относительно пройденных циклов
+			return OK;
 		}
 	}
 
-	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
+	return SymbolNotFound;
 }
-
-
 
 /**
  * Медленный поиск, который не использует буфер в оперативной памяти.
  * @param conf - рабочая конфигурация
  * @param symbol - символ, который требуется найти
- * @return позиция символа или ошибка
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolInFile(CipherInst *conf, char symbol)
+ReturnCode findSymbolInFile(CipherInst *conf, char symbol, unsigned long *result)
 {
 	char verySmallBuffer;
 
@@ -149,9 +149,12 @@ unsigned long findSymbolInFile(CipherInst *conf, char symbol)
 			rewind(conf->dict.dictInFile);				//поиск по файлу сначала
 		}
 		if (fgetc(conf->dict.dictInFile) == symbol)
-			return ftell(conf->dict.dictInFile) - 1;
+		{
+			*result = ftell(conf->dict.dictInFile) - 1;
+			return OK;
+		}
 	}
-	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
+	return SymbolNotFound;
 }
 
 /**
@@ -160,17 +163,22 @@ unsigned long findSymbolInFile(CipherInst *conf, char symbol)
  * @param memLength - длина памяти
  * @param start - откуда искать
  * @param symbol - что искать
- * @return позицию символа в памяти или -1, если символ в памяти отсутствует
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol)
+ReturnCode findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol,
+		unsigned long *result)
 {
 	for (unsigned long iterator = 0; iterator < memLength; iterator++)
 	{
 		if (start + iterator == memLength)		//обнуление позиции поиска
 			start -= memLength;				//поиск по памяти сначала
 		if (memory[start + iterator] == symbol)
-			return start + iterator;
+		{
+			*result = start + iterator;
+			return OK;
+		}
 	}
-	return -1; //TODO сделать другой механизм возврата (указатель на ошибку, если не NULL, то была ошибка)
+	return SymbolNotFound;
 }
 

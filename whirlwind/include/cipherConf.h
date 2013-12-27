@@ -14,11 +14,13 @@
 typedef enum
 {
 	OK,
+	Withdraw,
 	DataAlreadySet,
 	DictAlreadySet,
 	SymbolNotFoundInDict = -1,
 	ErrorAllocatingMemory = -2,
-	FileStreamIsClosed = -3
+	FileStreamIsClosed = -3,
+	SymbolNotFound = -4
 } ReturnCode;
 
 typedef struct drand48_data

@@ -19,42 +19,47 @@
  * Запоминает закодированный результат. Если подошло время отката - выполняет откат.
  * @param conf - конфигурация
  * @param result - указатель на результат шифрования (пара ключ-инициализатор)
- * @return 0 - откат выполнен, 1 - откат не нужно выполнять.
+ * @return Withdraw - откат выполнен, OK - откат не нужно выполнять, или ошибка
  */
-short processWithdraw(CipherInst *conf, unsigned long *result);
+ReturnCode processWithdraw(CipherInst *conf, unsigned long *result);
 
 /**
  * Производит откаты
  * @param conf - рабочая конфигурация
  * @param extraPairs - память для организации рекурсии случайных чисел
+ * @return ok или ошибку
  */
-void withdraw(CipherInst *conf, unsigned long **extraPairs);
+ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs);
 
 /**
  * Обрабатывает изменение словаря
  * @param conf - рабочая конфигурация
  * @param result - результат кодирования [позиция кодируемого символа, случайный инициализатор]
+ * @return ok или ошибку
  */
-void processChange(CipherInst *conf, unsigned long *result);
+ReturnCode processChange(CipherInst *conf, unsigned long *result);
 
 /**
  * Меняет в словаре местами 2 символа.
  * @param firstPos - указатель на позицию первого символ
  * @param secondPos - указатель на позицию второго символа
+ * @return код ошибки или ок
  */
-void changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos);
+ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos);
 
 /**
  * Производит дополнительные изменения в словаре
  * @param conf - конфигурация
+ * @return код ошибки или ок
  */
-void extraChangeDict(CipherInst *conf);
+ReturnCode extraChangeDict(CipherInst *conf);
 
 /**
  * Отменяет дополнительные изменения словаря, сделанные с помощью extraChangeDict
  * @param conf - рабочая конфигурация
  * @param extraPairs - N случайных чисел. Генерируются и используются рекурсино.
+ * @return код ошибки или ок
  */
-void revertExtraChangeDict(CipherInst *conf, unsigned long **extraPairs);
+ReturnCode revertExtraChangeDict(CipherInst *conf, unsigned long **extraPairs);
 
 #endif /* CIPHERADDON_H_ */

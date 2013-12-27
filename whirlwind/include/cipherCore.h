@@ -15,11 +15,11 @@
 #include "cipherAddon.h"
 
 /**
- * Кодирует 1 символ. Возвращает массив - состоящий из пары шифросимволов.
- * @param conf рабочая конфигурацияя
- * @param symbol кодируемый символ
- * @param result указатель на результат - long[2]
- * @return массив long в куче. ВАЖНО! Освободить при ненадобности!
+ * Кодирует 1 символ. Возвращает массив - состоящий из пары шифрокодов.
+ * @param conf - рабочая конфигурацияя
+ * @param symbol - кодируемый символ
+ * @param result - указатель на результат - long[2]
+ * @return код возврата (ошибка либо успех)
  */
 extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result);
 
@@ -36,8 +36,10 @@ extern ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
  * @param conf	рабочая конфигурация
  * @param symbol кодируемый символ
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolPosInDict(CipherInst *conf, char symbol);
+ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *result);
 
 /**
  * Производит поиск по памяти
@@ -45,16 +47,19 @@ unsigned long findSymbolPosInDict(CipherInst *conf, char symbol);
  * @param memLength - длина памяти
  * @param start - откуда искать
  * @param symbol - что искать
- * @return позицию символа в памяти или -1, если символ в памяти отсутствует
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol);
+ReturnCode findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol,
+		unsigned long *result);
 
 /**
  * Медленный поиск, который не использует буфер в оперативной памяти.
  * @param conf - рабочая конфигурация
  * @param symbol - символ, который требуется найти
- * @return позиция символа или ошибка
+ * @param result результат - позиция искомого символа
+ * @return - код возврата (ошибка или ок)
  */
-unsigned long findSymbolInFile(CipherInst *conf, char symbol);
+ReturnCode findSymbolInFile(CipherInst *conf, char symbol, unsigned long *result);
 
 #endif /* CIPHERCORE_H_ */
