@@ -15,7 +15,7 @@ int main()
 	int dataLen = strlen(toCrypt);
 
 	char *toDecrypt = malloc(dataLen);
-	long *result = malloc(2 * dataLen * sizeof(long));
+	unsigned long *result = calloc(2 * dataLen, sizeof(unsigned long));
 
 	cryptTest(result, toCrypt, dataLen);
 	printf("crypt finished\n");
@@ -26,7 +26,7 @@ int main()
 	return 0;
 }
 
-void cryptTest(long *result, char *toCrypt, int dataLen)
+void cryptTest(unsigned long *result, char *toCrypt, int dataLen)
 {
 	printf("cryptTest\n");
 	char *dict = malloc(25); //TODO добавить в документацию, что словарь должен составляться именно так.
@@ -38,7 +38,7 @@ void cryptTest(long *result, char *toCrypt, int dataLen)
 		setDataWithMemory(toCrypt, instance, dataLen);	//TODO насколько это вообще нужно?
 		setDictWithMemory(dict, instance, strlen(dict));
 
-		long *tempRes = malloc(2 * sizeof(long));
+		unsigned long *tempRes = malloc(2 * sizeof(unsigned long));
 		int m = 0;
 
 		for (int i = 0; i < dataLen; i++)
@@ -56,10 +56,12 @@ void cryptTest(long *result, char *toCrypt, int dataLen)
 		free(tempRes);
 		freeInst(instance);
 	}
+	else
+		printf("Can't create cipher instance!\n");
 	free(dict);
 }
 
-void decryptTest(char *result, long *pairs, int dataLen)
+void decryptTest(char *result, unsigned long *pairs, int dataLen)
 {
 	printf("decryptTest\n");
 	char *dict = malloc(25); //TODO добавить в документацию, что словарь должен составляться именно так.
@@ -73,9 +75,8 @@ void decryptTest(char *result, long *pairs, int dataLen)
 		char tempRes;
 		int m = 0;
 
-		long temp[2];
+		unsigned long temp[2];
 		int iter = 0;
-
 		for (int i = 0; i < dataLen; i++)
 		{
 			temp[0] = pairs[iter++];
@@ -89,6 +90,8 @@ void decryptTest(char *result, long *pairs, int dataLen)
 			result[i] = tempRes;
 		}
 	}
+	else
+		printf("Can't create cipher instance!\n");
 	freeInst(instance);
 
 	free(dict);

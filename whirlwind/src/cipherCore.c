@@ -17,7 +17,7 @@
  */
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 {
-	long charPos;
+	unsigned long charPos;
 	switch (findSymbolPosInDict(conf, symbol, &charPos))
 	//найти кодируемый символ
 	{

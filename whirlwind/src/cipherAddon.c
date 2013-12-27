@@ -59,14 +59,17 @@ ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs)
 {
 	long rand = 0;
+	ReturnCode ret;
 	//откатить все изменения, кроме последних двух
 	for (int i = conf->withdraw - 3; i >= 0; i -= 2)
 	{
 		srand48_r(conf->support->withdrawHistory[i], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
-			revertExtraChangeDict(conf, extraPairs);
+			ret = revertExtraChangeDict(conf, extraPairs);
+		if (ret != OK)
+			return ret;
 		rand = randVal(conf, conf->dictLen);
-		ReturnCode ret = changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
+		ret = changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
 		if (ret != OK)
 			return ret;
 	}
