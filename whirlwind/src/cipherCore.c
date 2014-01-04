@@ -18,8 +18,7 @@
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 {
 	unsigned long charPos;
-	switch (findSymbolPosInDict(conf, symbol, &charPos))
-	//найти кодируемый символ
+	switch (findSymbolPosInDict(conf, symbol, &charPos))	//найти кодируемый символ
 	{
 		case FileStreamIsClosed:
 			printf("Can't read dict's file!\n");

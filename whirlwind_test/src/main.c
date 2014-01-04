@@ -11,7 +11,7 @@
 
 int main()
 {
-	char *toCrypt = "very secret hello world very secret hello world very secret hello world very secret hello world";
+	char *toCrypt = "this is a test phrase";
 	int dataLen = strlen(toCrypt);
 
 	char *toDecrypt = malloc(dataLen);
@@ -81,7 +81,7 @@ void decryptTest(char *result, unsigned long *pairs, int dataLen)
 		{
 			temp[0] = pairs[iter++];
 			temp[1] = pairs[iter++];
-			printf("%d of %d\n", i, dataLen *2);
+			printf("%d of %d\n", i, dataLen);
 			if (decryptOneSymbol(instance, temp, &tempRes) != OK)
 			{
 				printf("Error decrypting pair %ld - %ld\n", pairs[i], pairs[i]);
