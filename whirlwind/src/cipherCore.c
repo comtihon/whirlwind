@@ -112,12 +112,14 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 {
 	ReturnCode ret = OK;
+	if(pair[0] > conf->dictLen)
+		return ArrayOutOfBounds;
 	if (conf->support->dictSelected == 0)	//работа со словарём в оперативной памяти
 		result[0] = conf->dict.dictInMemory[pair[0]];
 	else
 	{	//работа со словарём в файле
-		fseek(conf->data.cryptFile, pair[0], SEEK_SET);
-		fread(result, 1, 1, conf->dict.dictInFile);
+		fseek(conf->dict.dictInFile, pair[0], SEEK_SET);
+		fread(&result[0], 1, 1, conf->dict.dictInFile);
 	}
 
 	srand48_r(pair[1], conf->support->randomBuffer);

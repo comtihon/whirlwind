@@ -20,7 +20,8 @@ typedef enum
 	SymbolNotFoundInDict = -1,
 	ErrorAllocatingMemory = -2,
 	FileStreamIsClosed = -3,
-	SymbolNotFound = -4
+	SymbolNotFound = -4,
+	ArrayOutOfBounds = -5
 } ReturnCode;
 
 typedef struct drand48_data
@@ -55,7 +56,7 @@ typedef struct
 		unsigned long cryptLen;				//длина кодируемой информации
 
 		//дата, которую нужно зашифровать
-		union Data
+		union Data	//TODO нужно ли это?
 		{
 				char *cryptString;	//указатель на строку в памяти
 				FILE *cryptFile;	//укзаатель на файл
