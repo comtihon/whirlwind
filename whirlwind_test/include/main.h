@@ -13,8 +13,12 @@
 
 #include "whirlwind/include/cipherConf.h"
 
-void cryptTest(unsigned long *result, char *toCrypt, int dataLen);
+void cryptTestMemory(unsigned long *result, char *toCrypt, int dataLen);
 
-void decryptTest(char *result, unsigned long *pairs, int dataLen);
+void decryptTestMemory(char *result, unsigned long *pairs, int dataLen);
+
+void cryptTestFile(unsigned long *result, char *toCrypt, int dataLen);
+
+void decryptTestFile(char *result, unsigned long *pairs, int dataLen);
 
 #endif /* MAIN_H_ */

@@ -93,7 +93,6 @@ extern ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long di
  * @param data указатель на данные
  * @param указатель на настройки
  */
-extern ReturnCode setDataWithMemory(char *data, CipherInst *conf, unsigned long cryptLen);
 extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen);
 
 /**

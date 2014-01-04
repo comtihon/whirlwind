@@ -6,7 +6,7 @@
  */
 
 #include "cipherCore.h"
-
+//TODO cryptToFile
 /**
  * Кодирует строку символов. Возвращает код ошибки (или успеха).
  * Результат - закодированная строка, записанная в переменную.
@@ -35,7 +35,7 @@ ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, 
 	free(tempRes);
 	return ret;
 }
-
+//TODO decryptToFile
 /**
  * Декодирует строку пар шифрокодов в строку символов.
  * @param conf - рабочая конфигурация
@@ -117,7 +117,7 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 	else
 	{	//работа со словарём в файле
 		fseek(conf->data.cryptFile, pair[0], SEEK_SET);
-		fread(result, 1, conf->dictLen, conf->dict.dictInFile);
+		fread(result, 1, 1, conf->dict.dictInFile);
 	}
 
 	srand48_r(pair[1], conf->support->randomBuffer);
@@ -152,10 +152,16 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 	int cycles = 0;
 	long partLen = 0;
 	long readRes;
-	char *buffer = NULL;
+	if (conf->dict.dictInFile)
+		rewind(conf->dict.dictInFile);
+	else
+		return FileStreamIsClosed;
 
+	char *buffer = NULL;
 	for (long i = 0; i <= conf->dictLen / MAX_FILE_BUF_SIZE; i++)
 	{
+		partLen = conf->dictLen > MAX_FILE_BUF_SIZE? MAX_FILE_BUF_SIZE : conf->dictLen;
+
 		if (!conf->dict.dictInFile)	//файловый сокет закрыт
 		    return FileStreamIsClosed;	//дальнейший поиск невозможен
 
@@ -166,14 +172,14 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 			    return findSymbolInFile(conf, symbol, result);	//произвести медленный поиск
 		}
 
-		long readRes = fread(buffer, 1, conf->dictLen, conf->dict.dictInFile);	//считать весь файл в буфер
+		long readRes = fread(buffer, 1, partLen, conf->dict.dictInFile);	//считать весь файл в буфер
 		//  if (readRes != conf->dictLen)	//TODO обработка ошибки чтения
 
 		charPos = randVal(conf, conf->dictLen);
 		if (findSymbolInMemory(buffer, conf->dictLen, charPos, symbol, result) == OK)	//ищем символ по буферу
 		{
 			free(buffer);
-			*result = ftell(conf->dict.dictInFile) - *result;//TODO неверное вычисление. Придётся рассчитывать относительно пройденных циклов
+			*result = *result + MAX_FILE_BUF_SIZE * i;//TODO неверное вычисление. Придётся рассчитывать относительно пройденных циклов
 			return OK;
 		}
 	}

@@ -121,11 +121,11 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 		}
 		char buf1;
 		fseek(conf->dict.dictInFile, *firstPos, SEEK_SET);
-		fread(&buf1, 1, conf->dictLen, conf->dict.dictInFile);
+		fread(&buf1, 1, 1, conf->dict.dictInFile);
 
 		char buf2;
 		fseek(conf->dict.dictInFile, *secondPos, SEEK_SET);
-		fread(&buf2, 1, conf->dictLen, conf->dict.dictInFile);
+		fread(&buf2, 1, 1, conf->dict.dictInFile);
 
 		fseek(conf->dict.dictInFile, *firstPos, SEEK_SET);
 		fwrite(&buf2, 1, 1, conf->dict.dictInFile);

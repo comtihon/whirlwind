@@ -85,6 +85,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
 		conf->dict.dictInFile = dict;
 		conf->support->dictSelected = 1;
 		conf->dictLen = dictLen;
+		printf("dictLen = %ld\n", dictLen);
 		return OK;
 	}
 }
@@ -95,22 +96,6 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
  * @param указатель на настройки
  * @param cryptLen длина кодируемой информации
  */
-ReturnCode setDataWithMemory(char *data, CipherInst *conf, unsigned long cryptLen)
-{
-	if(conf->data.cryptString)
-	{
-		printf("Error setting data! Data was already set.");
-		return DataAlreadySet;
-	}
-	else
-	{
-		conf->data.cryptString = data;
-		conf->support->dataSelected = 0;
-		conf->cryptLen = cryptLen;
-		return OK;
-	}
-}
-
 ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen)
 {
 	if(conf->data.cryptFile)
