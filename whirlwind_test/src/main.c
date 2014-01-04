@@ -18,15 +18,15 @@ int main()
 	unsigned long *result = malloc(2 * dataLen * sizeof(unsigned long));
 
 	//TODO move to CTest
-//	cryptTestMemory(result, toCrypt, dataLen);
-//	printf("crypt finished\n");
-//	decryptTestMemory(toDecrypt, result, dataLen);
-//	printf("decrypt finished: %s\n", toDecrypt);
+	cryptTestMemory(result, toCrypt, dataLen);
+	printf("crypt finished\n");
+	decryptTestMemory(toDecrypt, result, dataLen);
+	printf("decrypt finished: %s\n", toDecrypt);
 
-	cryptTestFile(result, toCrypt, dataLen);
-	printf("crypt file finished\n");
-	decryptTestFile(toDecrypt, result, dataLen);
-	printf("decrypt file finished: %s\n", toDecrypt);
+//	cryptTestFile(result, toCrypt, dataLen);
+//	printf("crypt file finished\n");
+//	decryptTestFile(toDecrypt, result, dataLen);
+//	printf("decrypt file finished: %s\n", toDecrypt);
 
 	free(result);
 	free(toDecrypt);

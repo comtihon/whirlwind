@@ -20,6 +20,7 @@ ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 
 	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
+		printf("Withdraw\n");
 		unsigned long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));//выделить память под случайные числа
 		if (extraPairs)
 		{
@@ -110,6 +111,7 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
+		printf("change %c on %ld to %c on %ld\n", conf->dict.dictInMemory[*secondPos], *secondPos, buf, *firstPos);
 		conf->dict.dictInMemory[*firstPos] = buf;
 	}
 	else
@@ -132,6 +134,8 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 
 		fseek(conf->dict.dictInFile, *secondPos, SEEK_SET);
 		fwrite(&buf1, 1, 1, conf->dict.dictInFile);
+
+		printf("change %c on %ld to %c on %ld\n", buf2, *secondPos, buf1, *firstPos);
 	}
 	return OK;
 }
