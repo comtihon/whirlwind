@@ -7,9 +7,67 @@
 
 #include "cipherCore.h"
 
+/**
+ * Кодирует строку символов. Возвращает код ошибки (или успеха).
+ * Результат - закодированная строка, записанная в переменную.
+ * @param conf - рабочая конфигурацияя
+ * @param string - кодируемая строка
+ * @param stringLen - длина строки
+ * @param result - указатель на результат - long[stringLen * 2]
+ * @return код возврата (ошибка либо успех)
+ */
+ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, unsigned long *result)
+{
+	ReturnCode ret = OK;
+	unsigned long *tempRes = malloc(2 * sizeof(unsigned long));
+	unsigned long m = 0;
+	for (unsigned long i = 0; i < stringLen; i++)
+	{
+		if ((ret = cryptOneSymbol(conf, string[i], tempRes)) != OK)
+		{
+			printf("Error crypting symbol %c[%d]\n", string[i], string[i]);
+			free(tempRes);
+			return ret;
+		}
+		result[m++] = tempRes[0];
+		result[m++] = tempRes[1];
+	}
+	free(tempRes);
+	return ret;
+}
+
+/**
+ * Декодирует строку пар шифрокодов в строку символов.
+ * @param conf - рабочая конфигурация
+ * @param cryptedPairs - закодированная строка
+ * @param pairsLen - длина закодированной строки
+ * @param result - указатель на буфер, в который будет писаться результат
+ * @return код возврата (ошибка либо успех)
+ */
+ReturnCode decryptString(CipherInst *conf, unsigned long *cryptedPairs, unsigned long pairsLen, char *result)
+{
+	ReturnCode ret = OK;
+	char tempRes;
+	unsigned long temp[2];
+	unsigned long iter = 0;
+	for (unsigned long i = 0; i < pairsLen; i++)
+	{
+		temp[0] = cryptedPairs[iter++];
+		temp[1] = cryptedPairs[iter++];
+		if ((ret = decryptOneSymbol(conf, temp, &tempRes)) != OK)
+		{
+			printf("Error decrypting pair %ld - %ld\n", cryptedPairs[i], cryptedPairs[i]);
+			return ret;
+		}
+		result[i] = tempRes;
+	}
+	return ret;
+}
+
 //TODO провести тайминг каждой функции.
 /**
- * Кодирует 1 символ. Возвращает массив - состоящий из пары шифрокодов.
+ * Кодирует 1 символ. Возвращает код ошибки (или успеха).
+ * Результат - пара шифрокодов, записывается в переменную.
  * @param conf - рабочая конфигурацияя
  * @param symbol - кодируемый символ
  * @param result - указатель на результат - long[2]
@@ -18,7 +76,8 @@
 ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 {
 	unsigned long charPos;
-	switch (findSymbolPosInDict(conf, symbol, &charPos))	//найти кодируемый символ
+	//найти кодируемый символ
+	switch (findSymbolPosInDict(conf, symbol, &charPos))
 	{
 		case FileStreamIsClosed:
 			printf("Can't read dict's file!\n");
@@ -66,10 +125,9 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 
 	if (processWithdraw(conf, pair) == OK)	//отката не было
 	{
-		if ((ret = changeDict(conf, &pair[0], &randNum)) != OK)
-			return ret;
+		if ((ret = changeDict(conf, &pair[0], &randNum)) != OK) return ret;
 		if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
-			extraChangeDict(conf);
+		    extraChangeDict(conf);
 	}
 
 	return ret;
@@ -99,13 +157,13 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 	for (long i = 0; i <= conf->dictLen / MAX_FILE_BUF_SIZE; i++)
 	{
 		if (!conf->dict.dictInFile)	//файловый сокет закрыт
-			return FileStreamIsClosed;	//дальнейший поиск невозможен
+		    return FileStreamIsClosed;	//дальнейший поиск невозможен
 
 		if (!buffer)
 		{
 			buffer = malloc(partLen);	//можно выделять место под буфер
 			if (!buffer)	//недостаточно места в памяти
-				return findSymbolInFile(conf, symbol, result);	//произвести медленный поиск
+			    return findSymbolInFile(conf, symbol, result);	//произвести медленный поиск
 		}
 
 		long readRes = fread(buffer, 1, conf->dictLen, conf->dict.dictInFile);	//считать весь файл в буфер
@@ -166,12 +224,12 @@ ReturnCode findSymbolInFile(CipherInst *conf, char symbol, unsigned long *result
  * @return - код возврата (ошибка или ок)
  */
 ReturnCode findSymbolInMemory(char *memory, unsigned long memLength, unsigned long start, char symbol,
-		unsigned long *result)
+        unsigned long *result)
 {
 	for (unsigned long iterator = 0; iterator < memLength; iterator++)
 	{
 		if (start + iterator == memLength)		//обнуление позиции поиска
-			start -= memLength;				//поиск по памяти сначала
+		    start -= memLength;				//поиск по памяти сначала
 		if (memory[start + iterator] == symbol)
 		{
 			*result = start + iterator;

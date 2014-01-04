@@ -35,25 +35,8 @@ void cryptTest(unsigned long *result, char *toCrypt, int dataLen)
 	CipherInst *instance = init(time(NULL), 2, 7);
 	if (instance)
 	{
-		setDataWithMemory(toCrypt, instance, dataLen);	//TODO насколько это вообще нужно?
 		setDictWithMemory(dict, instance, strlen(dict));
-
-		unsigned long *tempRes = malloc(2 * sizeof(unsigned long));
-		int m = 0;
-
-		for (int i = 0; i < dataLen; i++)
-		{
-			printf("%d of %d\n", i, dataLen - 1);
-			if (cryptOneSymbol(instance, toCrypt[i], tempRes) != OK)
-			{
-				printf("Error crypting symbol %c[%d]\n", toCrypt[i], toCrypt[i]);
-				break;
-			}
-			result[m++] = tempRes[0];
-			result[m++] = tempRes[1];
-
-		}
-		free(tempRes);
+		cryptString(instance, toCrypt, dataLen, result);
 		freeInst(instance);
 	}
 	else
@@ -71,28 +54,11 @@ void decryptTest(char *result, unsigned long *pairs, int dataLen)
 	if (instance)
 	{
 		setDictWithMemory(dict, instance, strlen(dict));
-
-		char tempRes;
-		int m = 0;
-
-		unsigned long temp[2];
-		int iter = 0;
-		for (int i = 0; i < dataLen; i++)
-		{
-			temp[0] = pairs[iter++];
-			temp[1] = pairs[iter++];
-			printf("%d of %d\n", i, dataLen);
-			if (decryptOneSymbol(instance, temp, &tempRes) != OK)
-			{
-				printf("Error decrypting pair %ld - %ld\n", pairs[i], pairs[i]);
-				break;
-			}
-			result[i] = tempRes;
-		}
+		decryptString(instance, pairs, dataLen, result);
+		freeInst(instance);
 	}
 	else
 		printf("Can't create cipher instance!\n");
-	freeInst(instance);
 
 	free(dict);
 }

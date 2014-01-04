@@ -15,7 +15,29 @@
 #include "cipherAddon.h"
 
 /**
- * Кодирует 1 символ. Возвращает массив - состоящий из пары шифрокодов.
+ * Кодирует строку символов. Возвращает код ошибки (или успеха).
+ * Результат - закодированная строка, записанная в переменную.
+ * @param conf - рабочая конфигурацияя
+ * @param string - кодируемая строка
+ * @param stringLen - длина строки
+ * @param result - указатель на результат - long[stringLen * 2]
+ * @return код возврата (ошибка либо успех)
+ */
+extern ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, unsigned long *result);
+
+/**
+ * Декодирует строку пар шифрокодов в строку символов.
+ * @param conf - рабочая конфигурация
+ * @param cryptedPairs - закодированная строка
+ * @param pairsLen - длина закодированной строки
+ * @param result - указатель на буфер, в который будет писаться результат
+ * @return код возврата (ошибка либо успех)
+ */
+extern ReturnCode decryptString(CipherInst *conf, unsigned long *cryptedPairs, unsigned long pairsLen, char *result);
+
+/**
+ * Кодирует 1 символ. Возвращает код ошибки (или успеха).
+ * Результат - пара шифрокодов, записывается в переменную.
  * @param conf - рабочая конфигурацияя
  * @param symbol - кодируемый символ
  * @param result - указатель на результат - long[2]
