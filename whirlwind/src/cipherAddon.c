@@ -111,9 +111,7 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 	{	//работа с оперативной памятью
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
-		printf("change %c on %ld to %c on %ld\n", conf->dict.dictInMemory[*secondPos], *secondPos, buf, *firstPos);
-		conf->dict.dictInMemory[*firstPos] = buf;
-		printf("Dict changed %s\n", conf->dict.dictInMemory);
+		conf->dict.dictInMemory[*secondPos] = buf;
 	}
 	else
 	{	//работа с файлом
