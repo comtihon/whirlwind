@@ -16,8 +16,10 @@
 ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 {
 	for (int i = 0; i < 2; i++)	//сохранение данных для отката
+	{
 		conf->support->withdrawHistory[conf->support->withdrawCount++] = result[i];
-
+		printf("Saved %d to withdraw %d\n", result[i], conf->support->withdrawCount-1);
+	}
 	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
 		printf("Withdraw\n");
@@ -62,8 +64,9 @@ ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs)
 	long rand = 0;
 	ReturnCode ret;
 	//откатить все изменения, кроме последних двух
-	for (int i = conf->withdraw - 3; i >= 0; i -= 2)
+	for (int i = conf->withdraw - 1; i >= 0; i -= 2)
 	{
+		printf("Make withdraw %d [%d][%d]\n", i, conf->support->withdrawHistory[i], conf->support->withdrawHistory[i-1]);
 		srand48_r(conf->support->withdrawHistory[i], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
 			ret = revertExtraChangeDict(conf, extraPairs);
@@ -109,6 +112,9 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 		return OK;
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
+		printf("change %c on %ld to %c on %ld\n"
+						, conf->dict.dictInMemory[*secondPos], *secondPos
+						, conf->dict.dictInMemory[*firstPos], *firstPos);
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
 		conf->dict.dictInMemory[*secondPos] = buf;
