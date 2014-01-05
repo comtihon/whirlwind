@@ -17,5 +17,6 @@ unsigned long randVal(CipherInst *conf, unsigned long max)	//TODO test (max <0),
 {//TODO случайное значение убогое
 	unsigned long out = 0;
 	lrand48_r(conf->support->randomBuffer, &out);
+	printf("random value %ld (%ld)\n", max? out % max : out, out);
 	return max? out % max : out;
 }

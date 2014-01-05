@@ -104,7 +104,7 @@ ReturnCode processChange(CipherInst *conf, unsigned long *result)
  * @return код ошибки или ок
  */
 ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos)
-{
+{//TODO изменения в словаре не происходят! (в памяти)
 	if (*firstPos == *secondPos) //если позиции равны
 		return OK;
 	if (conf->support->dictSelected == 0)
@@ -113,6 +113,7 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
 		printf("change %c on %ld to %c on %ld\n", conf->dict.dictInMemory[*secondPos], *secondPos, buf, *firstPos);
 		conf->dict.dictInMemory[*firstPos] = buf;
+		printf("Dict changed %s\n", conf->dict.dictInMemory);
 	}
 	else
 	{	//работа с файлом
