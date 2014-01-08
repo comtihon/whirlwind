@@ -76,13 +76,8 @@ ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs)
 	{
 		printf("Make withdraw %d [%d][%d]\n", i, conf->support->withdrawHistory[i][0],
 		        conf->support->withdrawHistory[i][1]);
-		srand48_r(conf->support->withdrawHistory[i][1], conf->support->randomBuffer);
-		if (conf->variability > 0)		//если были случайные изменения - отменить их
-		    ret = revertExtraChangeDict(conf, extraPairs);
-		if (ret != OK) return ret;
-		rand = randVal(conf, conf->dictLen);
-		ret = changeDict(conf, &rand, &conf->support->withdrawHistory[i][0]);
-		if (ret != OK) return ret;
+		if ((ret = revertChange(conf, conf->support->withdrawHistory[i], extraPairs)) != OK)
+			return ret;
 	}
 	srand48_r(time(NULL), conf->support->randomBuffer);	//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 	conf->support->withdrawCount = 0;	//обнулить счётчик откатов
@@ -108,6 +103,25 @@ ReturnCode processChange(CipherInst *conf, unsigned long *result)
 }
 
 /**
+ * Отменяет изменение словаря.
+ * @param conf - рабочая конфигурация
+ * @param result - сохранённый откат - пара шифросимволов
+ * @param extraPairs - буфер для реверса случайных чисел
+ * @return ok или ошибку
+ */
+ReturnCode revertChange(CipherInst *conf, unsigned long *result, unsigned long **extraPairs)
+{
+	ReturnCode ret = OK;
+	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
+
+	if (conf->variability)	//если задана дополнительная изменчивость - обратить её
+	    ret = revertExtraChangeDict(conf, extraPairs);
+	if (ret != OK) return ret;
+	long randomPos = randVal(conf, conf->dictLen);
+	return changeDict(conf, &randomPos, &result[0]);	//обратить станадртные изменения
+}
+
+/**
  * Меняет в словаре местами 2 символа.
  * @param firstPos - указатель на позицию первого символ
  * @param secondPos - указатель на позицию второго символа
@@ -120,9 +134,6 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
 		printf("X %d %d\n", *firstPos, *secondPos);
-//		printf("change %c on %ld to %c on %ld\n"
-//						, conf->dict.dictInMemory[*secondPos], *secondPos
-//						, conf->dict.dictInMemory[*firstPos], *firstPos);
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
 		conf->dict.dictInMemory[*secondPos] = buf;

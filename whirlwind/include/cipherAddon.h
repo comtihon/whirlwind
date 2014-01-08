@@ -55,6 +55,15 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 ReturnCode extraChangeDict(CipherInst *conf);
 
 /**
+ * Отменяет изменение словаря.
+ * @param conf - рабочая конфигурация
+ * @param result - сохранённый откат - пара шифросимволов
+ * @param extraPairs - буфер для реверса случайных чисел
+ * @return ok или ошибку
+ */
+ReturnCode revertChange(CipherInst *conf, unsigned long *result, unsigned long **extraPairs);
+
+/**
  * Отменяет дополнительные изменения словаря, сделанные с помощью extraChangeDict
  * @param conf - рабочая конфигурация
  * @param extraPairs - N случайных чисел. Генерируются и используются рекурсино.
