@@ -121,7 +121,6 @@ void decryptTestMemory(char *result, unsigned long *pairs, int dataLen)
 		setDictWithMemory(dict, instance, strlen(dict));
 		decryptString(instance, pairs, dataLen, result);
 		freeInst(instance);
-
 	}
 	else
 		printf("Can't create cipher instance!\n");

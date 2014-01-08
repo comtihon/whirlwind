@@ -40,7 +40,7 @@ CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth
 
 	if (withdraw)
 	{	//если включены откаты - выделить память под историю откатов и установить значения переменныхs
-		instance->support->withdrawHistory = malloc(withdraw * sizeof(unsigned long*));
+		instance->support->withdrawHistory = malloc(withdrawDepth * sizeof(unsigned long*));
 		if (!instance->support->withdrawHistory)
 		{
 			printf("Error allocating space for support's withdraw history!\n");
@@ -80,7 +80,7 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen
 {
 	if (conf->dict.dictInMemory)
 	{
-		printf("Error setting dict! Dict was already set.");
+		printf("Error setting dict! Dict was already set.\n");
 		return DictAlreadySet;
 	}
 	else
@@ -96,7 +96,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
 {
 	if (conf->dict.dictInFile)
 	{
-		printf("Error setting dict! Dict was already set.");
+		printf("Error setting dict! Dict was already set.\n");
 		return DictAlreadySet;
 	}
 	else
@@ -119,7 +119,7 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen)
 {
 	if (conf->data.cryptFile)
 	{
-		printf("Error setting data! Data was already set.");
+		printf("Error setting data! Data was already set.\n");
 		return DataAlreadySet;
 	}
 	else
