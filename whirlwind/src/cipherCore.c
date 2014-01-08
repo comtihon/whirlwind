@@ -125,6 +125,7 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 	srand48_r(pair[1], conf->support->randomBuffer);
 	long randNum = randVal(conf, conf->dictLen);
 
+	//TODO пересмотреть механизм откатов. По факту откатывает всё, а не несколько изменений
 	if (processWithdraw(conf, pair) == OK)	//отката не было
 	{
 		if ((ret = changeDict(conf, &pair[0], &randNum)) != OK) return ret;

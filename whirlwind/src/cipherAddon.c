@@ -15,12 +15,19 @@
  */
 ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 {
-	for (int i = 0; i < 2; i++)	//сохранение данных для отката
+	if (!conf->withdraw) return OK;
+
+	conf->support->withdrawCount++;
+
+	if (conf->support->withdrawCount > conf->withdraw - conf->withdrawDepth) //если приближается откат - начинаем сохранять результаты
 	{
-		conf->support->withdrawHistory[conf->support->withdrawCount++] = result[i];
-		printf("Saved %d to withdraw %d\n", result[i], conf->support->withdrawCount-1);
+		int pos = conf->withdrawDepth - (conf->withdraw - conf->support->withdrawCount)-1;
+		printf("Saving %d-%d to withdraw %d\n", result[0], result[1], pos);
+		for (int i = 0; i < 2; i++)	//сохранение данных для отката
+			conf->support->withdrawHistory[pos][i] = result[i];
 	}
-	if (conf->withdraw && conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
+
+	if (conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
 	{
 		printf("Withdraw\n");
 		unsigned long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));//выделить память под случайные числа
@@ -64,18 +71,17 @@ ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs)
 	long rand = 0;
 	ReturnCode ret;
 	//откатить все изменения, кроме последних двух
-	for (int i = conf->withdraw - 1; i >= 0; i -= 2)
+	for (int i = conf->withdrawDepth - 1; i >= 0; i--)
 	{
-		printf("Make withdraw %d [%d][%d]\n", i, conf->support->withdrawHistory[i], conf->support->withdrawHistory[i-1]);
-		srand48_r(conf->support->withdrawHistory[i], conf->support->randomBuffer);
+		printf("Make withdraw %d [%d][%d]\n", i, conf->support->withdrawHistory[i][0],
+		        conf->support->withdrawHistory[i][0]);
+		srand48_r(conf->support->withdrawHistory[i][1], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
-			ret = revertExtraChangeDict(conf, extraPairs);
-		if (ret != OK)
-			return ret;
+		    ret = revertExtraChangeDict(conf, extraPairs);
+		if (ret != OK) return ret;
 		rand = randVal(conf, conf->dictLen);
-		ret = changeDict(conf, &rand, &conf->support->withdrawHistory[i - 1]);
-		if (ret != OK)
-			return ret;
+		ret = changeDict(conf, &rand, &conf->support->withdrawHistory[i][0]);
+		if (ret != OK) return ret;
 	}
 	srand48_r(time(NULL), conf->support->randomBuffer);	//TODO как это здесь (и везде) влияет на надёжность и зачем вообще нужно?
 	conf->support->withdrawCount = 0;	//обнулить счётчик откатов
@@ -94,9 +100,9 @@ ReturnCode processChange(CipherInst *conf, unsigned long *result)
 	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
 	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	if ((ret = changeDict(conf, &result[0], &randomPos)) != OK)	//поменять местами закодированный и случайный символ
-		return ret;
+	    return ret;
 	if (conf->variability)	//если задана дополнительная изменчивость - выполнить её
-		ret = extraChangeDict(conf);
+	    ret = extraChangeDict(conf);
 	return ret;
 }
 
@@ -107,14 +113,15 @@ ReturnCode processChange(CipherInst *conf, unsigned long *result)
  * @return код ошибки или ок
  */
 ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos)
-{//TODO изменения в словаре не происходят! (в памяти)
+{	//TODO изменения в словаре не происходят! (в памяти)
 	if (*firstPos == *secondPos) //если позиции равны
-		return OK;
+	    return OK;
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
-		printf("change %c on %ld to %c on %ld\n"
-						, conf->dict.dictInMemory[*secondPos], *secondPos
-						, conf->dict.dictInMemory[*firstPos], *firstPos);
+		printf("X %d %d\n", *firstPos, *secondPos);
+//		printf("change %c on %ld to %c on %ld\n"
+//						, conf->dict.dictInMemory[*secondPos], *secondPos
+//						, conf->dict.dictInMemory[*firstPos], *firstPos);
 		char buf = conf->dict.dictInMemory[*firstPos];
 		conf->dict.dictInMemory[*firstPos] = conf->dict.dictInMemory[*secondPos];
 		conf->dict.dictInMemory[*secondPos] = buf;
@@ -159,8 +166,8 @@ ReturnCode extraChangeDict(CipherInst *conf)
 	{	//extraChangeDict
 		randomPos = randVal(conf, conf->dictLen);
 		secondRandPos = randVal(conf, conf->dictLen);
-		if ((ret = changeDict(conf, &randomPos, &secondRandPos)) != OK)
-			return ret;
+		printf("EX %d %d\n", randomPos, secondRandPos);
+		if ((ret = changeDict(conf, &randomPos, &secondRandPos)) != OK) return ret;
 	}
 	return ret;
 }
@@ -178,9 +185,9 @@ ReturnCode revertExtraChangeDict(CipherInst *conf, unsigned long **extraPairs)
 	{
 		extraPairs[i][0] = randVal(conf, conf->dictLen);
 		extraPairs[i][1] = randVal(conf, conf->dictLen);
+		printf("REX %d %d\n", extraPairs[i][0], extraPairs[i][1]);
 	}
 	for (int i = conf->variability - 1; i >= 0; i--)//поменять местами обратно с конца - случайные места друг на друга
-		if ((ret = changeDict(conf, &extraPairs[i][0], &extraPairs[i][1])) != OK)
-			return ret;
+		if ((ret = changeDict(conf, &extraPairs[i][1], &extraPairs[i][0])) != OK) return ret;
 	return ret;
 }

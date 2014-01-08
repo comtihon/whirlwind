@@ -12,36 +12,55 @@
  * @param randInit - начальный инициализатор псевдослучайной последовательности
  * @param variability - численное значение изменчивости словаря в % (от 1 до 70)
  * @param withdraw - численное значение отката
+ * @param withdrawDepth - глубина отката (не может быть больше его численного значения)
  * @return указатель на сущность или NULL
  */
-CipherInst *init(long randInit, int variability, int withdraw)
+CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth)
 {
-	CipherInst *instance = malloc (sizeof(CipherInst));
-	if(!instance)
+	if (withdrawDepth > withdraw)
+	{
+		printf("withdrawDepth can't be more, than withdrawCount!\n");
+		return NULL;
+	}
+
+	CipherInst *instance = malloc(sizeof(CipherInst));	//выделить память под основную структуру
+	if (!instance)
 	{
 		printf("Error allocating space for conf!\n");
 		return NULL;
 	}
 
-	instance->support = malloc (sizeof(Support));
-	if(!instance->support)
+	instance->support = malloc(sizeof(Support));	//выделить память под дополнительную структуру
+	if (!instance->support)
 	{
 		printf("Error allocating space for conf`s support!\n");
 		return NULL;
 	}
-	instance->support->lastWithdraw=0;
+	instance->support->lastWithdraw = 0;
 
-	instance->support->withdrawHistory = malloc(2 * withdraw * sizeof(unsigned long));
-	if(!instance->support->withdrawHistory)
-	{
-		printf("Error allocating space for support's withdraw history!\n");
-		return NULL;
+	if (withdraw)
+	{	//если включены откаты - выделить память под историю откатов и установить значения переменныхs
+		instance->support->withdrawHistory = malloc(withdraw * sizeof(unsigned long*));
+		if (!instance->support->withdrawHistory)
+		{
+			printf("Error allocating space for support's withdraw history!\n");
+			return NULL;
+		}
+		for (int i = 0; i < withdrawDepth; i++)
+		{
+			instance->support->withdrawHistory[i] = malloc(2 * sizeof(unsigned long));
+			if (!instance->support->withdrawHistory[i])
+			{
+				printf("Error allocating space for support's withdraw history!\n");
+				return NULL;
+			}
+		}
+		instance->withdraw = withdraw;	//откат - сброс 2х значений (символ-инициализатор).
+		instance->withdrawDepth = withdrawDepth;
 	}
-
-	instance->variability = variability > 70? 70 : variability;
-	instance->withdraw = withdraw * 2;	//откат - сброс 2х значений (символ-инициализатор). Требуется удвоить.
-	instance->support->randomBuffer = malloc(sizeof(RandBuf));
-	if(!instance->support->randomBuffer)
+	instance->variability = variability > 70 ? 70 : variability;
+	instance->support->randomBuffer = malloc(sizeof(RandBuf));//выделить память под буфер псевдослучайной последовательности
+	if (!instance->support->randomBuffer)
 	{
 		printf("Error allocating space for support's random buffer struct!\n");
 		return NULL;
@@ -59,7 +78,7 @@ CipherInst *init(long randInit, int variability, int withdraw)
  */
 ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen)
 {
-	if(conf->dict.dictInMemory)
+	if (conf->dict.dictInMemory)
 	{
 		printf("Error setting dict! Dict was already set.");
 		return DictAlreadySet;
@@ -75,7 +94,7 @@ ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen
 
 ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
 {
-	if(conf->dict.dictInFile)
+	if (conf->dict.dictInFile)
 	{
 		printf("Error setting dict! Dict was already set.");
 		return DictAlreadySet;
@@ -98,7 +117,7 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
  */
 ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen)
 {
-	if(conf->data.cryptFile)
+	if (conf->data.cryptFile)
 	{
 		printf("Error setting data! Data was already set.");
 		return DataAlreadySet;
@@ -112,13 +131,14 @@ ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen)
 	}
 }
 
-
 /**
  * Освобождает память, занятую под настройки шифра
  * @param указатель на сущность с настройками
  */
 void freeInst(CipherInst *conf)
 {
+	for (int i = 0; i < conf->withdrawDepth; i++)
+		free(conf->support->withdrawHistory[i]);
 	free(conf->support->withdrawHistory);
 	free(conf->support->randomBuffer);
 	free(conf->support);

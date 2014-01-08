@@ -13,6 +13,10 @@
 
 #include "whirlwind/include/cipherConf.h"
 
+void testRandom();
+
+unsigned long rrandVal(RandBuf *randomBuffer, unsigned long max);
+
 void cryptTestMemory(unsigned long *result, char *toCrypt, int dataLen);
 
 void decryptTestMemory(char *result, unsigned long *pairs, int dataLen);

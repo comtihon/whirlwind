@@ -36,7 +36,7 @@ typedef struct drand48_data
 
 typedef struct
 {
-		unsigned long *withdrawHistory;		//данные для отката
+		unsigned long **withdrawHistory;		//данные для отката
 		int lastWithdraw;			//последний записанный откат
 		int withdrawCount;			//текущее значение отката
 		short dictSelected;			//0 - словарь в памяти, 1 - словарь в файле
@@ -67,6 +67,7 @@ typedef struct
 
 		int variability;			//изменчивость словаря
 		int withdraw;				//значение отката
+		int withdrawDepth;			//глубина отката
 		//TODO callback function pointer
 } CipherInst;
 
@@ -75,9 +76,10 @@ typedef struct
  * @param randInit - начальный инициализатор псевдослучайной последовательности
  * @param variability - численное значение изменчивости словаря в % (от 1 до 100)
  * @param withdraw - численное значение отката
+ * @param withdrawDepth - глубина отката (не может быть больше его численного значения)
  * @return указатель на сущность или NULL
  */
-extern CipherInst *init(long randInit, int variability, int withdraw);
+extern CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth);
 
 /**
  * Добавляет в настройки словарь.
