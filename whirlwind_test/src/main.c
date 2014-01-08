@@ -24,8 +24,8 @@ int main()
 	//TODO move to CTest
 	cryptTestMemory(result, toCrypt, dataLen);
 	printf("crypt finished\n");
-//	decryptTestMemory(toDecrypt, result, dataLen);
-//	printf("decrypt finished: %s\n", toDecrypt);
+	decryptTestMemory(toDecrypt, result, dataLen);
+	printf("decrypt finished: %s\n", toDecrypt);
 
 //	cryptTestFile(result, toCrypt, dataLen);
 //	printf("crypt file finished\n");

@@ -15,7 +15,7 @@
  */
 ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 {
-	if (!conf->withdraw) return OK;
+	if (!conf->withdraw) return OK;	//откат не включён
 
 	conf->support->withdrawCount++;
 
@@ -28,7 +28,7 @@ ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 			conf->support->withdrawHistory[pos][i] = result[i];
 	}
 
-	if (conf->support->withdrawCount == conf->withdraw)	//время отката (если он включён)
+	if (conf->support->withdrawCount == conf->withdraw)	//время отката
 	{
 		printf("Withdraw\n");
 		unsigned long **extraPairs = malloc(conf->variability * sizeof(unsigned long *));//выделить память под случайные числа
@@ -113,11 +113,10 @@ ReturnCode revertChange(CipherInst *conf, unsigned long *result, unsigned long *
 {
 	ReturnCode ret = OK;
 	srand48_r(result[1], conf->support->randomBuffer);	//задать новую псевдослучайную последовательность
-
+	long randomPos = randVal(conf, conf->dictLen);	//взять случайный символ в словаре
 	if (conf->variability)	//если задана дополнительная изменчивость - обратить её
 	    ret = revertExtraChangeDict(conf, extraPairs);
 	if (ret != OK) return ret;
-	long randomPos = randVal(conf, conf->dictLen);
 	return changeDict(conf, &randomPos, &result[0]);	//обратить станадртные изменения
 }
 
@@ -128,9 +127,10 @@ ReturnCode revertChange(CipherInst *conf, unsigned long *result, unsigned long *
  * @return код ошибки или ок
  */
 ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *secondPos)
-{	//TODO изменения в словаре не происходят! (в памяти)
+{
 	if (*firstPos == *secondPos) //если позиции равны
 	    return OK;
+
 	if (conf->support->dictSelected == 0)
 	{	//работа с оперативной памятью
 		printf("X %d %d\n", *firstPos, *secondPos);
@@ -161,6 +161,13 @@ ReturnCode changeDict(CipherInst *conf, unsigned long *firstPos, unsigned long *
 
 		printf("change %c on %ld to %c on %ld\n", buf2, *secondPos, buf1, *firstPos);
 	}
+
+	for(int i = 0; i < conf->dictLen; i++)
+				printf("%d\t", i);
+		printf("\n");
+		for(int i = 0; i < conf->dictLen; i++)
+			printf("%c\t", conf->dict.dictInMemory[i]);
+		printf("\n");
 	return OK;
 }
 
