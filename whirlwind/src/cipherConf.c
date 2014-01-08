@@ -36,7 +36,6 @@ CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth
 		printf("Error allocating space for conf`s support!\n");
 		return NULL;
 	}
-	instance->support->lastWithdraw = 0;
 
 	if (withdraw)
 	{	//если включены откаты - выделить память под историю откатов и установить значения переменныхs
@@ -57,6 +56,8 @@ CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth
 		}
 		instance->withdraw = withdraw;	//откат - сброс 2х значений (символ-инициализатор).
 		instance->withdrawDepth = withdrawDepth;
+		instance->support->lastWithdraw = 0;
+		instance->support->withdrawCount = 0;
 	}
 	instance->variability = variability > 70 ? 70 : variability;
 	instance->support->randomBuffer = malloc(sizeof(RandBuf));//выделить память под буфер псевдослучайной последовательности

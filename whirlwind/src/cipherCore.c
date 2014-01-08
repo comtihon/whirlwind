@@ -87,7 +87,6 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 			return SymbolNotFoundInDict;
 	}
 	unsigned long nextRandom = randVal(conf, conf->dictLen);	//случайно выбрать инициализатор для последовательности
-
 	//результат - позиция найденного символа + инициализатор
 	result[0] = charPos;
 	result[1] = nextRandom;
@@ -121,11 +120,8 @@ ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 		fseek(conf->dict.dictInFile, pair[0], SEEK_SET);
 		fread(&result[0], 1, 1, conf->dict.dictInFile);
 	}
-	printf("decrypt %c on %ld\n", result[0], pair[0]);
 	srand48_r(pair[1], conf->support->randomBuffer);
 	long randNum = randVal(conf, conf->dictLen);
-
-	//TODO пересмотреть механизм откатов. По факту откатывает всё, а не несколько изменений
 	if (processWithdraw(conf, pair) == OK)	//отката не было
 	{
 		if ((ret = changeDict(conf, &pair[0], &randNum)) != OK) return ret;
@@ -177,7 +173,6 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 
 		long readRes = fread(buffer, 1, partLen, conf->dict.dictInFile);	//считать весь файл в буфер
 		//  if (readRes != conf->dictLen)	//TODO обработка ошибки чтения
-		printf("Dict %s\n", buffer);
 
 		charPos = randVal(conf, conf->dictLen);
 		if (findSymbolInMemory(buffer, conf->dictLen, charPos, symbol, result) == OK)	//ищем символ по буферу
@@ -243,7 +238,6 @@ ReturnCode findSymbolInMemory(char *memory, unsigned long memLength, unsigned lo
 		if (memory[start + iterator] == symbol)
 		{
 			*result = start + iterator;
-			printf("Symbol %c found on pos %d\n", symbol, *result);
 			return OK;
 		}
 	}
