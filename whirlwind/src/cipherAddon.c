@@ -19,9 +19,10 @@ ReturnCode processWithdraw(CipherInst *conf, unsigned long *result)
 
 	conf->support->withdrawCount++;
 
-	if (conf->support->withdrawCount > conf->withdraw - conf->withdrawDepth) //если приближается откат - начинаем сохранять результаты
+	if (conf->support->withdrawCount > conf->withdraw - conf->withdrawDepth
+	        && conf->support->withdrawCount != conf->withdraw) //если приближается откат - начинаем сохранять результаты (последний не сохраняем)
 	{
-		int pos = conf->withdrawDepth - (conf->withdraw - conf->support->withdrawCount)-1;
+		int pos = conf->withdrawDepth - (conf->withdraw - conf->support->withdrawCount) - 1;
 		printf("Saving %d-%d to withdraw %d\n", result[0], result[1], pos);
 		for (int i = 0; i < 2; i++)	//сохранение данных для отката
 			conf->support->withdrawHistory[pos][i] = result[i];
@@ -71,10 +72,10 @@ ReturnCode withdraw(CipherInst *conf, unsigned long **extraPairs)
 	long rand = 0;
 	ReturnCode ret;
 	//откатить все изменения, кроме последних двух
-	for (int i = conf->withdrawDepth - 1; i >= 0; i--)
+	for (int i = conf->withdrawDepth - 2; i >= 0; i--)
 	{
 		printf("Make withdraw %d [%d][%d]\n", i, conf->support->withdrawHistory[i][0],
-		        conf->support->withdrawHistory[i][0]);
+		        conf->support->withdrawHistory[i][1]);
 		srand48_r(conf->support->withdrawHistory[i][1], conf->support->randomBuffer);
 		if (conf->variability > 0)		//если были случайные изменения - отменить их
 		    ret = revertExtraChangeDict(conf, extraPairs);
