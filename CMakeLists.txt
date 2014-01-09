@@ -12,6 +12,13 @@ set(PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
  
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}")
- 
+
+include(CTest)
+enable_testing()
+
 add_subdirectory(whirlwind)
 add_subdirectory(whirlwind_test)
+
+add_test( RandomTest ${CMAKE_BINARY_DIR}/RandomTest )
+add_test( CryptMemoryTest-Mem ${CMAKE_BINARY_DIR}/CryptMemoryTest Mem)
+add_test( CryptMemoryTest-File ${CMAKE_BINARY_DIR}/CryptMemoryTest File)

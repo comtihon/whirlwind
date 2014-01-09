@@ -105,7 +105,6 @@ ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen)
 		conf->dict.dictInFile = dict;
 		conf->support->dictSelected = 1;
 		conf->dictLen = dictLen;
-		printf("dictLen = %ld\n", dictLen);
 		return OK;
 	}
 }

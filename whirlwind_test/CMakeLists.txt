@@ -5,11 +5,9 @@ set (PROJECT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_C_FLAGS "-std=c99") 
  
-set(TEST_SOURCE
-${PROJECT_SOURCE_DIR}/main.c
-)
+add_executable(RandomTest ${PROJECT_SOURCE_DIR}/randomTest.c)
  
 include_directories("${PROJECT_BINARY_DIR}")
-add_executable(${PROJECT_NAME} ${TEST_SOURCE})
+add_executable(CryptMemoryTest ${PROJECT_SOURCE_DIR}/cryptMemoryTest.c)
 include_directories("${PROJECT_INCLUDE_DIR}")
-target_link_libraries (whirlwind_test whirlwind)
+target_link_libraries (CryptMemoryTest whirlwind)

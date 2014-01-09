@@ -70,6 +70,16 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # The main all target
 all: cmake_check_build_system
 	cd /home/tihon/whirlwind && $(CMAKE_COMMAND) -E cmake_progress_start /home/tihon/whirlwind/CMakeFiles /home/tihon/whirlwind/whirlwind_test/CMakeFiles/progress.marks
@@ -102,42 +112,80 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-whirlwind_test/CMakeFiles/whirlwind_test.dir/rule:
-	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind_test/CMakeFiles/whirlwind_test.dir/rule
-.PHONY : whirlwind_test/CMakeFiles/whirlwind_test.dir/rule
+whirlwind_test/CMakeFiles/CryptMemoryTest.dir/rule:
+	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind_test/CMakeFiles/CryptMemoryTest.dir/rule
+.PHONY : whirlwind_test/CMakeFiles/CryptMemoryTest.dir/rule
 
 # Convenience name for target.
-whirlwind_test: whirlwind_test/CMakeFiles/whirlwind_test.dir/rule
-.PHONY : whirlwind_test
+CryptMemoryTest: whirlwind_test/CMakeFiles/CryptMemoryTest.dir/rule
+.PHONY : CryptMemoryTest
 
 # fast build rule for target.
-whirlwind_test/fast:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/whirlwind_test.dir/build.make whirlwind_test/CMakeFiles/whirlwind_test.dir/build
-.PHONY : whirlwind_test/fast
+CryptMemoryTest/fast:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/CryptMemoryTest.dir/build.make whirlwind_test/CMakeFiles/CryptMemoryTest.dir/build
+.PHONY : CryptMemoryTest/fast
 
-src/main.o: src/main.c.o
-.PHONY : src/main.o
+# Convenience name for target.
+whirlwind_test/CMakeFiles/RandomTest.dir/rule:
+	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind_test/CMakeFiles/RandomTest.dir/rule
+.PHONY : whirlwind_test/CMakeFiles/RandomTest.dir/rule
+
+# Convenience name for target.
+RandomTest: whirlwind_test/CMakeFiles/RandomTest.dir/rule
+.PHONY : RandomTest
+
+# fast build rule for target.
+RandomTest/fast:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/RandomTest.dir/build.make whirlwind_test/CMakeFiles/RandomTest.dir/build
+.PHONY : RandomTest/fast
+
+src/cryptMemoryTest.o: src/cryptMemoryTest.c.o
+.PHONY : src/cryptMemoryTest.o
 
 # target to build an object file
-src/main.c.o:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/whirlwind_test.dir/build.make whirlwind_test/CMakeFiles/whirlwind_test.dir/src/main.c.o
-.PHONY : src/main.c.o
+src/cryptMemoryTest.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/CryptMemoryTest.dir/build.make whirlwind_test/CMakeFiles/CryptMemoryTest.dir/src/cryptMemoryTest.c.o
+.PHONY : src/cryptMemoryTest.c.o
 
-src/main.i: src/main.c.i
-.PHONY : src/main.i
+src/cryptMemoryTest.i: src/cryptMemoryTest.c.i
+.PHONY : src/cryptMemoryTest.i
 
 # target to preprocess a source file
-src/main.c.i:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/whirlwind_test.dir/build.make whirlwind_test/CMakeFiles/whirlwind_test.dir/src/main.c.i
-.PHONY : src/main.c.i
+src/cryptMemoryTest.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/CryptMemoryTest.dir/build.make whirlwind_test/CMakeFiles/CryptMemoryTest.dir/src/cryptMemoryTest.c.i
+.PHONY : src/cryptMemoryTest.c.i
 
-src/main.s: src/main.c.s
-.PHONY : src/main.s
+src/cryptMemoryTest.s: src/cryptMemoryTest.c.s
+.PHONY : src/cryptMemoryTest.s
 
 # target to generate assembly for a file
-src/main.c.s:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/whirlwind_test.dir/build.make whirlwind_test/CMakeFiles/whirlwind_test.dir/src/main.c.s
-.PHONY : src/main.c.s
+src/cryptMemoryTest.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/CryptMemoryTest.dir/build.make whirlwind_test/CMakeFiles/CryptMemoryTest.dir/src/cryptMemoryTest.c.s
+.PHONY : src/cryptMemoryTest.c.s
+
+src/randomTest.o: src/randomTest.c.o
+.PHONY : src/randomTest.o
+
+# target to build an object file
+src/randomTest.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/RandomTest.dir/build.make whirlwind_test/CMakeFiles/RandomTest.dir/src/randomTest.c.o
+.PHONY : src/randomTest.c.o
+
+src/randomTest.i: src/randomTest.c.i
+.PHONY : src/randomTest.i
+
+# target to preprocess a source file
+src/randomTest.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/RandomTest.dir/build.make whirlwind_test/CMakeFiles/RandomTest.dir/src/randomTest.c.i
+.PHONY : src/randomTest.c.i
+
+src/randomTest.s: src/randomTest.c.s
+.PHONY : src/randomTest.s
+
+# target to generate assembly for a file
+src/randomTest.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind_test/CMakeFiles/RandomTest.dir/build.make whirlwind_test/CMakeFiles/RandomTest.dir/src/randomTest.c.s
+.PHONY : src/randomTest.c.s
 
 # Help Target
 help:
@@ -145,12 +193,17 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... CryptMemoryTest"
+	@echo "... RandomTest"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... whirlwind_test"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
+	@echo "... test"
+	@echo "... src/cryptMemoryTest.o"
+	@echo "... src/cryptMemoryTest.i"
+	@echo "... src/cryptMemoryTest.s"
+	@echo "... src/randomTest.o"
+	@echo "... src/randomTest.i"
+	@echo "... src/randomTest.s"
 .PHONY : help
 
 
