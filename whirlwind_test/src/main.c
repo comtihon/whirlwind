@@ -70,7 +70,7 @@ void testRandom()
 void cryptTestMemory(unsigned long *result, char *toCrypt, int dataLen)
 {
 	printf("cryptTestMemory\n");
-	char *dict = malloc(25); //TODO добавить в документацию, что словарь должен составляться именно так.
+	char *dict = malloc(29); //TODO добавить в документацию, что словарь должен составляться именно так.
 	strcpy(dict, "qwertyuio pasdfghjk lzxcvbnm");
 
 	CipherInst *instance = INIT;
@@ -112,7 +112,7 @@ void cryptTestFile(unsigned long *result, char *toCrypt, int dataLen)
 void decryptTestMemory(char *result, unsigned long *pairs, int dataLen)
 {
 	printf("decryptTestMemory\n");
-	char *dict = malloc(25); //TODO добавить в документацию, что словарь должен составляться именно так.
+	char *dict = malloc(29); //TODO добавить в документацию, что словарь должен составляться именно так.
 	strcpy(dict, "qwertyuio pasdfghjk lzxcvbnm");
 
 	CipherInst *instance = INIT;
