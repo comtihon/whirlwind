@@ -6,7 +6,133 @@
  */
 
 #include "cipherCore.h"
-//TODO cryptToFile
+
+ReturnCode cryptFileToFile(CipherInst *conf, FILE *encryptedFile, FILE *cleanFile)
+{
+	if (!cleanFile || !encryptedFile)
+	{
+		printf("File to work with is closed!\n");
+		return FileStreamIsClosed;
+	}
+	return cryptFile(conf, encryptedFile, cleanFile, writeToFile);
+}
+
+ReturnCode cryptFileToMemory(CipherInst *conf, FILE *encryptedFile, unsigned long *result)
+{
+	if (!encryptedFile)
+	{
+		printf("File to work with is closed!\n");
+		return FileStreamIsClosed;
+	}
+	return cryptFile(conf, encryptedFile, result, writeToMemory);
+}
+
+/**
+ *
+ * @param cleanFile
+ * @param partResult
+ * @param partResultLen
+ * @return
+ */
+ReturnCode writeToFile(FILE *cleanFile, unsigned long *partResult, unsigned long partResultLen)
+{
+	if (!cleanFile)
+	{
+		//TODO обработка ошибок
+	}
+	unsigned long result = fwrite(partResult, sizeof(unsigned long), partResultLen, cleanFile);
+	//TODO обработка ошибок записи
+	return OK;
+}
+
+/**
+ *
+ * @param result
+ * @param partResult
+ * @param partResultLen
+ * @return
+ */
+ReturnCode writeToMemory(unsigned long *result, unsigned long *partResult, unsigned long partResultLen)
+{
+	for(unsigned long i = 0; i < partResultLen; i++)
+	{
+		*result = partResult[i];
+		result++;	//TODO протестировать при нескольких вызовах!
+	}
+	return OK;
+}
+
+ReturnCode decryptFileToFile(CipherInst *conf, FILE *encryptedFile, FILE *cleanFile)
+{
+	ReturnCode ret = OK;
+	return OK;
+}
+
+ReturnCode decryptFileToMemory(CipherInst *conf, FILE *encryptedFile, unsigned long *result)
+{
+	ReturnCode ret = OK;
+	return OK;
+}
+
+ReturnCode cryptFile(CipherInst *conf, FILE *encryptedFile, void *forResult,
+        ReturnCode (*saveResult)(void *, unsigned long *, unsigned long))
+{
+	ReturnCode ret = OK;
+
+	//определение размера файла
+	fseek(encryptedFile, 0, SEEK_END);
+	unsigned long fileSize = ftell(encryptedFile);
+	rewind(encryptedFile);
+
+	unsigned long partLen;
+
+	char *buffer = NULL;
+	unsigned long partResultLen = 0;
+	unsigned long *partResult;
+
+	long cycles = fileSize / MAX_FILE_BUF_SIZE;
+	printf("Number of cycles = %d\n", cycles);
+
+	for (long i = 0; i <= cycles; i++)	//цикл разбивает файл на куски по 10мб и кодирует каждый кусок
+	{
+		if (!encryptedFile)	//файловый сокет закрыт
+		    return FileStreamIsClosed;	//дальнейший поиск невозможен
+		partLen = fileSize > MAX_FILE_BUF_SIZE ? MAX_FILE_BUF_SIZE : fileSize;	//рассчитать размер куска
+		fileSize -= partLen;
+
+		//выделить в памяти место под считываемые и кодируемые данные
+		if (partResultLen * 2 != partLen)
+		{
+			partResult = realloc(partResult, 2 * partLen * sizeof(unsigned long));
+			partResultLen = partLen;
+		}
+		if (!buffer) buffer = malloc(partLen);
+
+		//проверить выделенную память
+		if (!buffer || !partResult)
+		{	//память не выделилась (недостаточно памяти)
+			if (buffer) free(buffer);
+			if (partResult) free(partResult);
+			return;	//TODO медленное кодирование файла
+		}
+
+		partResultLen = fread(buffer, 1, partLen, encryptedFile);	//считать кусок в буфер
+		//  if (partResultLen != partLen)	//TODO обработка ошибки чтения
+
+		if ((ret = cryptString(conf, buffer, partResultLen, partResult)) != OK)		//произошла ошибка кодирования
+		{
+			free(buffer);
+			free(partResult);
+			return ret;
+		}
+		else
+			(*saveResult)(forResult, partResult, partResultLen);	//запись результата в файл или память
+	}
+	free(buffer);
+	free(partResult);
+	return ret;
+}
+
 /**
  * Кодирует строку символов. Возвращает код ошибки (или успеха).
  * Результат - закодированная строка, записанная в переменную.
@@ -35,7 +161,7 @@ ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, 
 	free(tempRes);
 	return ret;
 }
-//TODO decryptToFile
+
 /**
  * Декодирует строку пар шифрокодов в строку символов.
  * @param conf - рабочая конфигурация
@@ -111,8 +237,7 @@ ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *result)
 ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result)
 {
 	ReturnCode ret = OK;
-	if(pair[0] > conf->dictLen)
-		return ArrayOutOfBounds;
+	if (pair[0] > conf->dictLen) return ArrayOutOfBounds;
 	if (conf->support->dictSelected == 0)	//работа со словарём в оперативной памяти
 		result[0] = conf->dict.dictInMemory[pair[0]];
 	else
@@ -156,10 +281,13 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 	else
 		return FileStreamIsClosed;
 
+	unsigned long totalLen = conf->dictLen;
+
 	char *buffer = NULL;
-	for (long i = 0; i <= conf->dictLen / MAX_FILE_BUF_SIZE; i++)
+	for (long i = 0; i <= totalLen / MAX_FILE_BUF_SIZE; i++)
 	{
-		partLen = conf->dictLen > MAX_FILE_BUF_SIZE? MAX_FILE_BUF_SIZE : conf->dictLen;
+		partLen = totalLen > MAX_FILE_BUF_SIZE ? MAX_FILE_BUF_SIZE : totalLen;
+		totalLen -= partLen;
 
 		if (!conf->dict.dictInFile)	//файловый сокет закрыт
 		    return FileStreamIsClosed;	//дальнейший поиск невозможен
@@ -172,10 +300,10 @@ ReturnCode findSymbolPosInDict(CipherInst *conf, char symbol, unsigned long *res
 		}
 
 		long readRes = fread(buffer, 1, partLen, conf->dict.dictInFile);	//считать весь файл в буфер
-		//  if (readRes != conf->dictLen)	//TODO обработка ошибки чтения
+		//  if (readRes != partLen)	//TODO обработка ошибки чтения
 
 		charPos = randVal(conf, conf->dictLen);
-		if (findSymbolInMemory(buffer, conf->dictLen, charPos, symbol, result) == OK)	//ищем символ по буферу
+		if (findSymbolInMemory(buffer, partLen, charPos, symbol, result) == OK)	//ищем символ по буферу
 		{
 			free(buffer);
 			*result = *result + MAX_FILE_BUF_SIZE * i;

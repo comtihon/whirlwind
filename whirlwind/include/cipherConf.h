@@ -55,12 +55,6 @@ typedef struct
 		} dict;
 		unsigned long cryptLen;				//длина кодируемой информации
 
-		//дата, которую нужно зашифровать
-		union Data	//TODO нужно ли это?
-		{
-				char *cryptString;	//указатель на строку в памяти
-				FILE *cryptFile;	//укзаатель на файл
-		} data;
 		unsigned long dictLen;				//длина словаря
 
 		Support *support;
@@ -90,13 +84,6 @@ extern CipherInst *init(long randInit, int variability, int withdraw, int withdr
  */
 extern ReturnCode setDictWithMemory(char *dict, CipherInst *conf, unsigned long dictLen);
 extern ReturnCode setDictWithFile(FILE *dict, CipherInst *conf, unsigned long dictLen);
-
-/**
- * Добавляет в настройки кодируемые данные
- * @param data указатель на данные
- * @param указатель на настройки
- */
-extern ReturnCode setDataWithFile(FILE *data, CipherInst *conf, unsigned long cryptLen);
 
 /**
  * Освобождает память, занятую под настройки шифра
