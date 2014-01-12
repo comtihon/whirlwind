@@ -23,14 +23,14 @@ CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth
 		return NULL;
 	}
 
-	CipherInst *instance = malloc(sizeof(CipherInst));	//выделить память под основную структуру
+	CipherInst *instance = calloc(1, sizeof(CipherInst));	//выделить память под основную структуру
 	if (!instance)
 	{
 		printf("Error allocating space for conf!\n");
 		return NULL;
 	}
 
-	instance->support = malloc(sizeof(Support));	//выделить память под дополнительную структуру
+	instance->support = calloc(1, sizeof(Support));	//выделить память под дополнительную структуру
 	if (!instance->support)
 	{
 		printf("Error allocating space for conf`s support!\n");
@@ -56,8 +56,6 @@ CipherInst *init(long randInit, int variability, int withdraw, int withdrawDepth
 		}
 		instance->withdraw = withdraw;	//откат - сброс 2х значений (символ-инициализатор).
 		instance->withdrawDepth = withdrawDepth;
-		instance->support->lastWithdraw = 0;
-		instance->support->withdrawCount = 0;
 	}
 	instance->variability = variability > 70 ? 70 : variability;
 	instance->support->randomBuffer = malloc(sizeof(RandBuf));//выделить память под буфер псевдослучайной последовательности
