@@ -489,6 +489,19 @@ whirlwind/fast:
 .PHONY : whirlwind/fast
 
 #=============================================================================
+# Target rules for targets named whirlwind_java_bundle
+
+# Build rule for target.
+whirlwind_java_bundle: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 whirlwind_java_bundle
+.PHONY : whirlwind_java_bundle
+
+# fast build rule for target.
+whirlwind_java_bundle/fast:
+	$(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build
+.PHONY : whirlwind_java_bundle/fast
+
+#=============================================================================
 # Target rules for targets named CryptMemoryTest
 
 # Build rule for target.
@@ -552,6 +565,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... whirlwind"
+	@echo "... whirlwind_java_bundle"
 	@echo "... CryptMemoryTest"
 	@echo "... RandomTest"
 .PHONY : help

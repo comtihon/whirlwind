@@ -125,6 +125,20 @@ whirlwind/fast:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/build
 .PHONY : whirlwind/fast
 
+# Convenience name for target.
+whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule:
+	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
+.PHONY : whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
+
+# Convenience name for target.
+whirlwind_java_bundle: whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
+.PHONY : whirlwind_java_bundle
+
+# fast build rule for target.
+whirlwind_java_bundle/fast:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build
+.PHONY : whirlwind_java_bundle/fast
+
 src/cipherAddon.o: src/cipherAddon.c.o
 .PHONY : src/cipherAddon.o
 
@@ -148,6 +162,30 @@ src/cipherAddon.s: src/cipherAddon.c.s
 src/cipherAddon.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.s
 .PHONY : src/cipherAddon.c.s
+
+src/cipherBundle.o: src/cipherBundle.c.o
+.PHONY : src/cipherBundle.o
+
+# target to build an object file
+src/cipherBundle.c.o:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.o
+.PHONY : src/cipherBundle.c.o
+
+src/cipherBundle.i: src/cipherBundle.c.i
+.PHONY : src/cipherBundle.i
+
+# target to preprocess a source file
+src/cipherBundle.c.i:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.i
+.PHONY : src/cipherBundle.c.i
+
+src/cipherBundle.s: src/cipherBundle.c.s
+.PHONY : src/cipherBundle.s
+
+# target to generate assembly for a file
+src/cipherBundle.c.s:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.s
+.PHONY : src/cipherBundle.c.s
 
 src/cipherConf.o: src/cipherConf.c.o
 .PHONY : src/cipherConf.o
@@ -231,9 +269,13 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... whirlwind"
+	@echo "... whirlwind_java_bundle"
 	@echo "... src/cipherAddon.o"
 	@echo "... src/cipherAddon.i"
 	@echo "... src/cipherAddon.s"
+	@echo "... src/cipherBundle.o"
+	@echo "... src/cipherBundle.i"
+	@echo "... src/cipherBundle.s"
 	@echo "... src/cipherConf.o"
 	@echo "... src/cipherConf.i"
 	@echo "... src/cipherConf.s"
