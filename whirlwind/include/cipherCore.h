@@ -91,7 +91,7 @@ ReturnCode cryptFile(CipherInst *conf, FILE *cleanFile, void *forResult,
  * @param partResultLen - позиция для записи
  * @return код возврата (ошибка либо успех)
  */
-ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned long partResultLen);
+ReturnCode writeToFile(void *encryptedFile, unsigned long *partResult, unsigned long partResultLen);
 
 /**
  * Записывает пару шифросимволов в память.
@@ -100,7 +100,7 @@ ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned 
  * @param partResultLen - позиция для записи
  * @return код возврата (ошибка либо успех)
  */
-ReturnCode writeToMemory(unsigned long *result, unsigned long *partResult, unsigned long partResultLen);
+ReturnCode writeToMemory(void *result, unsigned long *partResult, unsigned long partResultLen);
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.

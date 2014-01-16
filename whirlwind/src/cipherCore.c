@@ -48,14 +48,14 @@ ReturnCode cryptFileToMemory(CipherInst *conf, FILE *cleanFile, unsigned long *r
  * @param partResultLen - позиция для записи
  * @return код возврата (ошибка либо успех)
  */
-ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned long partResultLen)
+ReturnCode writeToFile(void *encryptedFile, unsigned long *partResult, unsigned long partResultLen)
 {
 	if (!encryptedFile)
 	{
 		//TODO обработка ошибок
 	}
 	//TODO выставлять позицию для записи или авто
-	unsigned long result = fwrite(partResult, sizeof(unsigned long), partResultLen, encryptedFile);
+	unsigned long result = fwrite(partResult, sizeof(unsigned long), partResultLen, (FILE*)encryptedFile);
 	//TODO обработка ошибок записи
 	return OK;
 }
@@ -67,11 +67,11 @@ ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned 
  * @param partResultLen - позиция для записи
  * @return код возврата (ошибка либо успех)
  */
-ReturnCode writeToMemory(unsigned long *result, unsigned long *partResult, unsigned long partResultLen)
+ReturnCode writeToMemory(void *result, unsigned long *partResult, unsigned long partResultLen)
 {
 	for(unsigned long i = 0; i < partResultLen; i++)
 	{
-		*result = partResult[i];
+		*(unsigned long *)result = partResult[i];
 		result++;	//TODO протестировать при нескольких вызовах!
 	}
 	return OK;

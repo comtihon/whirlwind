@@ -22,7 +22,7 @@ add_custom_command(
         -d ${_stubDir}
         -jni CipherBundle
     )
-set(CMAKE_C_FLAGS "-fPIC")
+set(CMAKE_C_FLAGS "-std=c99 -fPIC")
 
 include_directories(/usr/include)
 include_directories(${JNI_INCLUDE_DIRS})
