@@ -1,5 +1,3 @@
-package com.cipher.whirlwind;
-
 /**
  * Created by tihon on 13.01.14.
  */

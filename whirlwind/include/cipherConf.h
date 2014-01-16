@@ -24,7 +24,7 @@ typedef enum
 	ArrayOutOfBounds = -5
 } ReturnCode;
 
-typedef struct drand48_data
+typedef struct
 {
 	unsigned short int __x[3];	/* Current state.  */
 	unsigned short int __old_x[3]; /* Old state.  */

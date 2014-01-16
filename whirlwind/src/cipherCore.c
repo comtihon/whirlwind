@@ -7,50 +7,65 @@
 
 #include "cipherCore.h"
 
-ReturnCode cryptFileToFile(CipherInst *conf, FILE *encryptedFile, FILE *cleanFile)
+/**
+ * Шифрует файл. Шифротекст записивает в другой файл. По окончании закрывает файловый поток.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - шифруемый файловый поток
+ * @param encryptedFile - зашифрованный файл
+ * @return код возврата (ошибка либо успех)
+ */
+ReturnCode cryptFileToFile(CipherInst *conf, FILE *cleanFile, FILE *encryptedFile)
 {
 	if (!cleanFile || !encryptedFile)
 	{
 		printf("File to work with is closed!\n");
 		return FileStreamIsClosed;
 	}
-	return cryptFile(conf, encryptedFile, cleanFile, writeToFile);
+	return cryptFile(conf, cleanFile, encryptedFile, writeToFile);
 }
 
-ReturnCode cryptFileToMemory(CipherInst *conf, FILE *encryptedFile, unsigned long *result)
+/**
+ * Шифрует файл. Шифротекст записывает в память - в результат result.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - шифруемый файл
+ * @param result - массив unsigned long для записи результата. Размер - размер файла (в байтах) * 2.
+ * @return код возврата (ошибка либо успех)s
+ */
+ReturnCode cryptFileToMemory(CipherInst *conf, FILE *cleanFile, unsigned long *result)
 {
-	if (!encryptedFile)
+	if (!cleanFile)
 	{
 		printf("File to work with is closed!\n");
 		return FileStreamIsClosed;
 	}
-	return cryptFile(conf, encryptedFile, result, writeToMemory);
+	return cryptFile(conf, cleanFile, result, writeToMemory);
 }
 
 /**
- *
- * @param cleanFile
- * @param partResult
- * @param partResultLen
- * @return
+ * Записывает в файл пару шифросимволов.
+ * @param encryptedFile - файл для записи шифросимволов
+ * @param partResult - пара шифросимволов
+ * @param partResultLen - позиция для записи
+ * @return код возврата (ошибка либо успех)
  */
-ReturnCode writeToFile(FILE *cleanFile, unsigned long *partResult, unsigned long partResultLen)
+ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned long partResultLen)
 {
-	if (!cleanFile)
+	if (!encryptedFile)
 	{
 		//TODO обработка ошибок
 	}
-	unsigned long result = fwrite(partResult, sizeof(unsigned long), partResultLen, cleanFile);
+	//TODO выставлять позицию для записи или авто
+	unsigned long result = fwrite(partResult, sizeof(unsigned long), partResultLen, encryptedFile);
 	//TODO обработка ошибок записи
 	return OK;
 }
 
 /**
- *
- * @param result
- * @param partResult
- * @param partResultLen
- * @return
+ * Записывает пару шифросимволов в память.
+ * @param result - память для записи.
+ * @param partResult - пара шифросимволов
+ * @param partResultLen - позиция для записи
+ * @return код возврата (ошибка либо успех)
  */
 ReturnCode writeToMemory(unsigned long *result, unsigned long *partResult, unsigned long partResultLen)
 {
@@ -74,15 +89,24 @@ ReturnCode decryptFileToMemory(CipherInst *conf, FILE *encryptedFile, unsigned l
 	return OK;
 }
 
-ReturnCode cryptFile(CipherInst *conf, FILE *encryptedFile, void *forResult,
+/**
+ * Производит кодирование файла. Результат отдаёт в функцию, которая производит сохранение.
+ * Делит файл на части по N мегабайт и кодирует каждую часть, сохраняя результат в функции.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - кодируемый файл
+ * @param forResult - указатель на место сохранение результата
+ * @param saveResult - указатель на функцию, которая сохраняет результат
+ * @return
+ */
+ReturnCode cryptFile(CipherInst *conf, FILE *cleanFile, void *forResult,
         ReturnCode (*saveResult)(void *, unsigned long *, unsigned long))
 {
 	ReturnCode ret = OK;
 
 	//определение размера файла
-	fseek(encryptedFile, 0, SEEK_END);
-	unsigned long fileSize = ftell(encryptedFile);
-	rewind(encryptedFile);
+	fseek(cleanFile, 0, SEEK_END);
+	unsigned long fileSize = ftell(cleanFile);
+	rewind(cleanFile);
 
 	unsigned long partLen;
 
@@ -92,10 +116,11 @@ ReturnCode cryptFile(CipherInst *conf, FILE *encryptedFile, void *forResult,
 
 	long cycles = fileSize / MAX_FILE_BUF_SIZE;
 	printf("Number of cycles = %d\n", cycles);
-
+//TODO сравнить скорости при кусках на 10 и 100 мегабайт. Если будет существенная разница - увеличить.
+//TODO как вариант сделать автоопределение размера куска.
 	for (long i = 0; i <= cycles; i++)	//цикл разбивает файл на куски по 10мб и кодирует каждый кусок
 	{
-		if (!encryptedFile)	//файловый сокет закрыт
+		if (!cleanFile)	//файловый сокет закрыт
 		    return FileStreamIsClosed;	//дальнейший поиск невозможен
 		partLen = fileSize > MAX_FILE_BUF_SIZE ? MAX_FILE_BUF_SIZE : fileSize;	//рассчитать размер куска
 		fileSize -= partLen;
@@ -113,10 +138,10 @@ ReturnCode cryptFile(CipherInst *conf, FILE *encryptedFile, void *forResult,
 		{	//память не выделилась (недостаточно памяти)
 			if (buffer) free(buffer);
 			if (partResult) free(partResult);
-			return;	//TODO медленное кодирование файла
+			return OK;	//TODO медленное кодирование файла
 		}
 
-		partResultLen = fread(buffer, 1, partLen, encryptedFile);	//считать кусок в буфер
+		partResultLen = fread(buffer, 1, partLen, cleanFile);	//считать кусок в буфер
 		//  if (partResultLen != partLen)	//TODO обработка ошибки чтения
 
 		if ((ret = cryptString(conf, buffer, partResultLen, partResult)) != OK)		//произошла ошибка кодирования
@@ -142,7 +167,7 @@ ReturnCode cryptFile(CipherInst *conf, FILE *encryptedFile, void *forResult,
  * @param result - указатель на результат - long[stringLen * 2]
  * @return код возврата (ошибка либо успех)
  */
-ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, unsigned long *result)
+ReturnCode cryptString(CipherInst *conf, const char *string, unsigned long stringLen, unsigned long *result)
 {
 	ReturnCode ret = OK;
 	unsigned long *tempRes = malloc(2 * sizeof(unsigned long));

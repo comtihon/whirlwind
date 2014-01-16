@@ -18,6 +18,7 @@ enable_testing()
 
 add_subdirectory(whirlwind)
 add_subdirectory(whirlwind_test)
+add_subdirectory(java_bundle)
 
 add_test( RandomTest ${CMAKE_BINARY_DIR}/RandomTest )
 add_test( CryptMemoryTest-Mem ${CMAKE_BINARY_DIR}/CryptMemoryTest Mem)

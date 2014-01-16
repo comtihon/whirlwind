@@ -126,18 +126,18 @@ whirlwind/fast:
 .PHONY : whirlwind/fast
 
 # Convenience name for target.
-whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule:
-	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
-.PHONY : whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
+whirlwind/CMakeFiles/whirlwind_static.dir/rule:
+	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 whirlwind/CMakeFiles/whirlwind_static.dir/rule
+.PHONY : whirlwind/CMakeFiles/whirlwind_static.dir/rule
 
 # Convenience name for target.
-whirlwind_java_bundle: whirlwind/CMakeFiles/whirlwind_java_bundle.dir/rule
-.PHONY : whirlwind_java_bundle
+whirlwind_static: whirlwind/CMakeFiles/whirlwind_static.dir/rule
+.PHONY : whirlwind_static
 
 # fast build rule for target.
-whirlwind_java_bundle/fast:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build
-.PHONY : whirlwind_java_bundle/fast
+whirlwind_static/fast:
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/build
+.PHONY : whirlwind_static/fast
 
 src/cipherAddon.o: src/cipherAddon.c.o
 .PHONY : src/cipherAddon.o
@@ -145,6 +145,7 @@ src/cipherAddon.o: src/cipherAddon.c.o
 # target to build an object file
 src/cipherAddon.c.o:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.o
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherAddon.c.o
 .PHONY : src/cipherAddon.c.o
 
 src/cipherAddon.i: src/cipherAddon.c.i
@@ -153,6 +154,7 @@ src/cipherAddon.i: src/cipherAddon.c.i
 # target to preprocess a source file
 src/cipherAddon.c.i:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.i
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherAddon.c.i
 .PHONY : src/cipherAddon.c.i
 
 src/cipherAddon.s: src/cipherAddon.c.s
@@ -161,31 +163,8 @@ src/cipherAddon.s: src/cipherAddon.c.s
 # target to generate assembly for a file
 src/cipherAddon.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherAddon.c.s
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherAddon.c.s
 .PHONY : src/cipherAddon.c.s
-
-src/cipherBundle.o: src/cipherBundle.c.o
-.PHONY : src/cipherBundle.o
-
-# target to build an object file
-src/cipherBundle.c.o:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.o
-.PHONY : src/cipherBundle.c.o
-
-src/cipherBundle.i: src/cipherBundle.c.i
-.PHONY : src/cipherBundle.i
-
-# target to preprocess a source file
-src/cipherBundle.c.i:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.i
-.PHONY : src/cipherBundle.c.i
-
-src/cipherBundle.s: src/cipherBundle.c.s
-.PHONY : src/cipherBundle.s
-
-# target to generate assembly for a file
-src/cipherBundle.c.s:
-	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_java_bundle.dir/build.make whirlwind/CMakeFiles/whirlwind_java_bundle.dir/src/cipherBundle.c.s
-.PHONY : src/cipherBundle.c.s
 
 src/cipherConf.o: src/cipherConf.c.o
 .PHONY : src/cipherConf.o
@@ -193,6 +172,7 @@ src/cipherConf.o: src/cipherConf.c.o
 # target to build an object file
 src/cipherConf.c.o:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.o
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherConf.c.o
 .PHONY : src/cipherConf.c.o
 
 src/cipherConf.i: src/cipherConf.c.i
@@ -201,6 +181,7 @@ src/cipherConf.i: src/cipherConf.c.i
 # target to preprocess a source file
 src/cipherConf.c.i:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.i
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherConf.c.i
 .PHONY : src/cipherConf.c.i
 
 src/cipherConf.s: src/cipherConf.c.s
@@ -209,6 +190,7 @@ src/cipherConf.s: src/cipherConf.c.s
 # target to generate assembly for a file
 src/cipherConf.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherConf.c.s
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherConf.c.s
 .PHONY : src/cipherConf.c.s
 
 src/cipherCore.o: src/cipherCore.c.o
@@ -217,6 +199,7 @@ src/cipherCore.o: src/cipherCore.c.o
 # target to build an object file
 src/cipherCore.c.o:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.o
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherCore.c.o
 .PHONY : src/cipherCore.c.o
 
 src/cipherCore.i: src/cipherCore.c.i
@@ -225,6 +208,7 @@ src/cipherCore.i: src/cipherCore.c.i
 # target to preprocess a source file
 src/cipherCore.c.i:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.i
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherCore.c.i
 .PHONY : src/cipherCore.c.i
 
 src/cipherCore.s: src/cipherCore.c.s
@@ -233,6 +217,7 @@ src/cipherCore.s: src/cipherCore.c.s
 # target to generate assembly for a file
 src/cipherCore.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherCore.c.s
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherCore.c.s
 .PHONY : src/cipherCore.c.s
 
 src/cipherSupport.o: src/cipherSupport.c.o
@@ -241,6 +226,7 @@ src/cipherSupport.o: src/cipherSupport.c.o
 # target to build an object file
 src/cipherSupport.c.o:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.o
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherSupport.c.o
 .PHONY : src/cipherSupport.c.o
 
 src/cipherSupport.i: src/cipherSupport.c.i
@@ -249,6 +235,7 @@ src/cipherSupport.i: src/cipherSupport.c.i
 # target to preprocess a source file
 src/cipherSupport.c.i:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.i
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherSupport.c.i
 .PHONY : src/cipherSupport.c.i
 
 src/cipherSupport.s: src/cipherSupport.c.s
@@ -257,6 +244,7 @@ src/cipherSupport.s: src/cipherSupport.c.s
 # target to generate assembly for a file
 src/cipherSupport.c.s:
 	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind.dir/build.make whirlwind/CMakeFiles/whirlwind.dir/src/cipherSupport.c.s
+	cd /home/tihon/whirlwind && $(MAKE) -f whirlwind/CMakeFiles/whirlwind_static.dir/build.make whirlwind/CMakeFiles/whirlwind_static.dir/src/cipherSupport.c.s
 .PHONY : src/cipherSupport.c.s
 
 # Help Target
@@ -269,13 +257,10 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... whirlwind"
-	@echo "... whirlwind_java_bundle"
+	@echo "... whirlwind_static"
 	@echo "... src/cipherAddon.o"
 	@echo "... src/cipherAddon.i"
 	@echo "... src/cipherAddon.s"
-	@echo "... src/cipherBundle.o"
-	@echo "... src/cipherBundle.i"
-	@echo "... src/cipherBundle.s"
 	@echo "... src/cipherConf.o"
 	@echo "... src/cipherConf.i"
 	@echo "... src/cipherConf.s"

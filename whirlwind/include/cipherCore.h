@@ -23,7 +23,7 @@
  * @param result - указатель на результат - long[stringLen * 2]
  * @return код возврата (ошибка либо успех)
  */
-extern ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stringLen, unsigned long *result);
+extern ReturnCode cryptString(CipherInst *conf, const char *string, unsigned long stringLen, unsigned long *result);
 
 /**
  * Декодирует строку пар шифрокодов в строку символов.
@@ -34,6 +34,24 @@ extern ReturnCode cryptString(CipherInst *conf, char *string, unsigned long stri
  * @return код возврата (ошибка либо успех)
  */
 extern ReturnCode decryptString(CipherInst *conf, unsigned long *cryptedPairs, unsigned long pairsLen, char *result);
+
+/**
+ * Шифрует файл. Шифротекст записивает в другой файл. По окончании закрывает файловый поток.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - шифруемый файловый поток
+ * @param encryptedFile - зашифрованный файл
+ * @return код возврата (ошибка либо успех)
+ */
+extern ReturnCode cryptFileToFile(CipherInst *conf, FILE *cleanFile, FILE *encryptedFile);
+
+/**
+ * Шифрует файл. Шифротекст записывает в память - в результат result.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - шифруемый файл
+ * @param result - массив unsigned long для записи результата. Размер - размер файла (в байтах) * 2.
+ * @return код возврата (ошибка либо успех)s
+ */
+extern ReturnCode cryptFileToMemory(CipherInst *conf, FILE *cleanFile, unsigned long *result);
 
 /**
  * Кодирует 1 символ. Возвращает код ошибки (или успеха).
@@ -53,6 +71,36 @@ extern ReturnCode cryptOneSymbol(CipherInst *conf, char symbol, unsigned long *r
  * @return код возврата (ошибка либо успех)
  */
 extern ReturnCode decryptOneSymbol(CipherInst *conf, unsigned long *pair, char *result);
+
+/**
+ * Производит кодирование файла. Результат отдаёт в функцию, которая производит сохранение.
+ * Делит файл на части по N мегабайт и кодирует каждую часть, сохраняя результат в функции.
+ * @param conf - рабочая конфигурация
+ * @param cleanFile - кодируемый файл
+ * @param forResult - указатель на место сохранение результата
+ * @param saveResult - указатель на функцию, которая сохраняет результат
+ * @return
+ */
+ReturnCode cryptFile(CipherInst *conf, FILE *cleanFile, void *forResult,
+        ReturnCode (*saveResult)(void *, unsigned long *, unsigned long));
+
+/**
+ * Записывает в файл пару шифросимволов.
+ * @param encryptedFile - файл для записи шифросимволов
+ * @param partResult - пара шифросимволов
+ * @param partResultLen - позиция для записи
+ * @return код возврата (ошибка либо успех)
+ */
+ReturnCode writeToFile(FILE *encryptedFile, unsigned long *partResult, unsigned long partResultLen);
+
+/**
+ * Записывает пару шифросимволов в память.
+ * @param result - память для записи.
+ * @param partResult - пара шифросимволов
+ * @param partResultLen - позиция для записи
+ * @return код возврата (ошибка либо успех)
+ */
+ReturnCode writeToMemory(unsigned long *result, unsigned long *partResult, unsigned long partResultLen);
 
 /**
  * Возвращает позицию символа в словаре или -1, если символ отсутствует.
