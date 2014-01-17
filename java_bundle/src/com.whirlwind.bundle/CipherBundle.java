@@ -1,3 +1,5 @@
+package com.whirlwind.bundle;
+
 /**
  * Created by tihon on 13.01.14.
  */
