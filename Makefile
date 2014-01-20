@@ -527,32 +527,6 @@ RandomTest/fast:
 	$(MAKE) -f whirlwind_test/CMakeFiles/RandomTest.dir/build.make whirlwind_test/CMakeFiles/RandomTest.dir/build
 .PHONY : RandomTest/fast
 
-#=============================================================================
-# Target rules for targets named CipherBundle
-
-# Build rule for target.
-CipherBundle: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 CipherBundle
-.PHONY : CipherBundle
-
-# fast build rule for target.
-CipherBundle/fast:
-	$(MAKE) -f java_bundle/CMakeFiles/CipherBundle.dir/build.make java_bundle/CMakeFiles/CipherBundle.dir/build
-.PHONY : CipherBundle/fast
-
-#=============================================================================
-# Target rules for targets named whirlwind_java_bunlde
-
-# Build rule for target.
-whirlwind_java_bunlde: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 whirlwind_java_bunlde
-.PHONY : whirlwind_java_bunlde
-
-# fast build rule for target.
-whirlwind_java_bunlde/fast:
-	$(MAKE) -f java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build.make java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build
-.PHONY : whirlwind_java_bunlde/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -594,8 +568,6 @@ help:
 	@echo "... whirlwind_static"
 	@echo "... CryptMemoryTest"
 	@echo "... RandomTest"
-	@echo "... CipherBundle"
-	@echo "... whirlwind_java_bunlde"
 .PHONY : help
 
 

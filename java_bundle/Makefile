@@ -111,72 +111,15 @@ depend:
 	cd /home/tihon/whirlwind && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-# Convenience name for target.
-java_bundle/CMakeFiles/CipherBundle.dir/rule:
-	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 java_bundle/CMakeFiles/CipherBundle.dir/rule
-.PHONY : java_bundle/CMakeFiles/CipherBundle.dir/rule
-
-# Convenience name for target.
-CipherBundle: java_bundle/CMakeFiles/CipherBundle.dir/rule
-.PHONY : CipherBundle
-
-# fast build rule for target.
-CipherBundle/fast:
-	cd /home/tihon/whirlwind && $(MAKE) -f java_bundle/CMakeFiles/CipherBundle.dir/build.make java_bundle/CMakeFiles/CipherBundle.dir/build
-.PHONY : CipherBundle/fast
-
-# Convenience name for target.
-java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/rule:
-	cd /home/tihon/whirlwind && $(MAKE) -f CMakeFiles/Makefile2 java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/rule
-.PHONY : java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/rule
-
-# Convenience name for target.
-whirlwind_java_bunlde: java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/rule
-.PHONY : whirlwind_java_bunlde
-
-# fast build rule for target.
-whirlwind_java_bunlde/fast:
-	cd /home/tihon/whirlwind && $(MAKE) -f java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build.make java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build
-.PHONY : whirlwind_java_bunlde/fast
-
-src/cipherBundle.o: src/cipherBundle.c.o
-.PHONY : src/cipherBundle.o
-
-# target to build an object file
-src/cipherBundle.c.o:
-	cd /home/tihon/whirlwind && $(MAKE) -f java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build.make java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/src/cipherBundle.c.o
-.PHONY : src/cipherBundle.c.o
-
-src/cipherBundle.i: src/cipherBundle.c.i
-.PHONY : src/cipherBundle.i
-
-# target to preprocess a source file
-src/cipherBundle.c.i:
-	cd /home/tihon/whirlwind && $(MAKE) -f java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build.make java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/src/cipherBundle.c.i
-.PHONY : src/cipherBundle.c.i
-
-src/cipherBundle.s: src/cipherBundle.c.s
-.PHONY : src/cipherBundle.s
-
-# target to generate assembly for a file
-src/cipherBundle.c.s:
-	cd /home/tihon/whirlwind && $(MAKE) -f java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/build.make java_bundle/CMakeFiles/whirlwind_java_bunlde.dir/src/cipherBundle.c.s
-.PHONY : src/cipherBundle.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... CipherBundle"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... whirlwind_java_bunlde"
-	@echo "... src/cipherBundle.o"
-	@echo "... src/cipherBundle.i"
-	@echo "... src/cipherBundle.s"
 .PHONY : help
 
 
