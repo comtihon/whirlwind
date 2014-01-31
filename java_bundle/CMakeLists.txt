@@ -11,7 +11,9 @@ set (CMAKE_JAVA_COMPILE_FLAGS "-source" "1.7" "-target" "1.7")
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (_stubDir "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
+#only for test if java file is not corrupted (is compiling)
 add_jar(CipherBundle ${PROJECT_SOURCE_DIR}/com/whirlwind/bundle/CipherBundle.java)
+
 get_target_property(_jarFile ${PROJECT_NAME} JAR_FILE)
 get_target_property(_classDir ${PROJECT_NAME} CLASSDIR)        
 
