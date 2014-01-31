@@ -11,16 +11,16 @@ set (CMAKE_JAVA_COMPILE_FLAGS "-source" "1.7" "-target" "1.7")
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set (_stubDir "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
-add_jar(CipherBundle ${PROJECT_SOURCE_DIR}/com.whirlwind.bundle/CipherBundle.java)
+add_jar(CipherBundle ${PROJECT_SOURCE_DIR}/com/whirlwind/bundle/CipherBundle.java)
 get_target_property(_jarFile ${PROJECT_NAME} JAR_FILE)
 get_target_property(_classDir ${PROJECT_NAME} CLASSDIR)        
 
 add_custom_command(
     OUTPUT CipherBundle.h
     COMMAND ${Java_JAVAH_EXECUTABLE} -jni 
-    								 -classpath .:${PROJECT_SOURCE_DIR}/com.whirlwind.bundle
+    								 -classpath .:${PROJECT_SOURCE_DIR}
         							 -d ${_stubDir}
-        							 -jni CipherBundle
+        							 -jni com.whirlwind.bundle.CipherBundle
     )
 set(CMAKE_C_FLAGS "-std=c99 -fPIC")
 

@@ -1,4 +1,4 @@
-#include "CipherBundle.h"
+#include "com_whirlwind_bundle_CipherBundle.h"
 #include "cipherConf.h"
 #include "cipherCore.h"
 
