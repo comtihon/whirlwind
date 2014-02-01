@@ -5,10 +5,6 @@ package com.whirlwind.bundle;
  */
 public class CipherBundle {
 
-    static {
-        System.loadLibrary("lib/libwhirlwind_java_bundle.so");
-    }
-
     public static native long init(long randInit, int variability, int withdraw, int withdrawDepth);
 
     public static native int cryptString(long confPtr, String string, long stringLen, long[] result);
