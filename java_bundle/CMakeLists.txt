@@ -31,8 +31,7 @@ include_directories(${JNI_INCLUDE_DIRS})
 include_directories(${JAVA_INCLUDE_PATH} ${PROJECT_SOURCE_DIR} ${PROJECT_HEADER_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/whirlwind/include) 
 
-add_library(${PROJECT_NAME} MODULE ${PROJECT_SOURCE_DIR}/cipherBundle.c CipherBundle.h)
+add_library(${PROJECT_NAME} SHARED ${PROJECT_SOURCE_DIR}/cipherBundle.c CipherBundle.h)
 
-set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".jnilib")
 target_link_libraries(${PROJECT_NAME} ${JNI_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/build/libwhirlwind_static.a)

@@ -6,7 +6,7 @@ package com.whirlwind.bundle;
 public class CipherBundle {
 
     static {
-        System.load("/home/tihon/whirlwind-core/modules/whirlwind/build/libwhirlwind_java_bunlde.jnilib");
+        System.load("/home/tihon/whirlwind-core/modules/whirlwind/build/libwhirlwind_java_bunlde.so");
     }
 
     public static native long init(long randInit, int variability, int withdraw, int withdrawDepth);

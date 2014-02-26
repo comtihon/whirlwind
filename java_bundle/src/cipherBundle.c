@@ -7,9 +7,10 @@
  * Method:    init
  * Signature: (JIII)Ljava/lang/Object;
  */
-JNIEXPORT jlong JNICALL Java_CipherBundle_init(JNIEnv *env, jclass cls, jlong randInit,
+JNIEXPORT jlong JNICALL Java_com_whirlwind_bundle_CipherBundle_init(JNIEnv *env, jclass cls, jlong randInit,
         jint variability, jint withdraw, jint withdrawDepth)
 {
+    printf("Started!\n");
 	CipherInst *conf = init(randInit, variability, withdraw, withdrawDepth);
 	return (long) conf;
 }
@@ -19,7 +20,7 @@ JNIEXPORT jlong JNICALL Java_CipherBundle_init(JNIEnv *env, jclass cls, jlong ra
  * Method:    cryptString
  * Signature: (Ljava/lang/Object;Ljava/lang/String;J[J)Ljava/lang/String;
  */
-JNIEXPORT jint JNICALL Java_CipherBundle_cryptString(JNIEnv *env, jclass cls, jlong confPtr,
+JNIEXPORT jint JNICALL Java_com_whirlwind_bundle_CipherBundle_cryptString(JNIEnv *env, jclass cls, jlong confPtr,
         jstring encryptingString, jlong stringLen, jlongArray result)
 {
 	CipherInst *conf = (CipherInst *) confPtr;
@@ -58,7 +59,7 @@ JNIEXPORT jint JNICALL Java_CipherBundle_cryptString(JNIEnv *env, jclass cls, jl
  * Method:    freeMemory
  * Signature: (J)V
  */
-JNIEXPORT void JNICALL Java_CipherBundle_freeMemory
+JNIEXPORT void JNICALL Java_com_whirlwind_bundle_CipherBundle_freeMemory
 (JNIEnv *env, jclass cls, jlong confPtr)
 {
 	CipherInst *conf = (CipherInst *)confPtr;
